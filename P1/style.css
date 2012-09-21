@@ -33,9 +33,9 @@ a:visited {
 	color: #5E5445;
 }
 
-/** Images**/
+/** Images **/
 
 img.float-left {
 	float:left;
-	margin: 0 15px 15px 0;
+	margin: 5px 15px 15px 0;
 }
