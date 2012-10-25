@@ -50,7 +50,7 @@ class users_controller extends base_controller {
 		if($token == "") {
 			Router::redirect("/users/login");
 		}
-		echo $this->user->first_name;
+		//echo $this->user->first_name;
 		else {
 			setcookie("token", $token, strtotime('+2 weeks'), '/');
 			Router::redirect("/");
