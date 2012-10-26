@@ -1,6 +1,3 @@
-html {
-/*	background-color:#e3dbdb; */
-}
 
 body {
 	width:860px;
@@ -28,6 +25,15 @@ h1 img {
 	margin-right: 13px;
 }
 
+a {
+	text-decoration:none;
+	color:#916f6f;
+}
+
+a:hover {
+	color: red;
+}
+
 ul#mainnav {
 	width:100%;
 	height:46px;
@@ -37,15 +43,13 @@ ul#mainnav {
 	position:relative;
 }
 
-ul#mainnav a {
+ul#mainnav > li > a {
 	float:left;
 	width:33%;
-	text-decoration:none;
-	color:#916f6f;
 	font-size: 36px;
 }
 
-ul#mainnav li.current a {
+li.current > a {
 	color:black;
 }
 
@@ -65,7 +69,6 @@ ul.subnav {
 	display:none;
 	text-align:left;
 	font-weight:600;
-	color: #916f6f;
 }
 
 ul.subnav li.current {
@@ -83,25 +86,31 @@ ul#mainnav li.current ul {
 	background-color: #fefefc;
 }
 
+/* Chirps subnav */
 ul#mainnav li#navitem1 ul{
 	width: 290px;
 }
 
+/* Chirpers subnav */
 ul#mainnav li#navitem2 ul{
 	left: 104px;
 	width: 539px;
 }
 
-ul#mainnav li#navitem3 ul{
+/* Chirp! subnav */
+ul#mainnav li#navitem3 ul{ 
 	left: 457px;
 	width: 313px;
-	padding: 0;
+	padding: 0; /* No subnav for Chirp!, so this ul is just for the red top border */
 }
 
 ul#mainnav li.current li {
 	display: inline;
 	margin-right: 15px;
-	font-size: 20px;
+}
+
+ul#mainnav ul.subnav  a {
+	margin-right: 15px;
 }
 
 ul#utilitynav {
@@ -112,19 +121,12 @@ ul#utilitynav {
 	font-size: 18px;
 }
 
-ul#utilitynav a {
-	text-decoration:none;
-	color:#916f6f;
-}
-
 ul#utilitynav li {
 	display:inline;
 	margin:0;
 }
 	
-ul#utilitynav a:hover, ul#mainnav a:hover {
-	color: red;
-}
+
 
 #main {
 	background-color:#f1f2e1;
@@ -143,3 +145,69 @@ h2 {
 	padding: 20px 40px 20px;
 }
 
+/*-------------------- 
+	Button links 
+--------------------*/
+
+p.button-link {
+ 	float:left;
+	margin: 0 15px 30px 0;
+}
+
+p.button-link a {
+	padding: 5px 10px;
+	color: white;
+	font-size: 20px;
+	font-weight: bold;
+	background-color: #916f6f;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+}
+
+p.button-link a:hover {
+	background-color: #ccb0a6;
+}
+/*---------------------------
+	Chirp stream styles 
+---------------------------*/
+
+ul#chirplist {
+	list-style-type:none;
+	margin: 20px 0 0;
+	padding: 0;
+	clear: both;
+}
+
+ul#chirplist ul {
+	list-style-type: none;
+	background-color: #fefefc;
+	margin: 30px 0;
+	padding: 10px;
+}
+
+ul#chirplist li.avatar {
+	float: left;
+	margin-right: 15px;
+	padding: 0;
+}
+
+ul#chirplist li.username {
+	font-weight: bold;
+	font-size: 18px;
+	margin-bottom: 5px;
+}
+
+ul#chirplist li.chirp {
+	font-size: 24px;
+	margin-bottom: 5px;
+	margin-left: 90px;
+}
+
+ul#chirplist li.date {
+	font-size: 15px;
+	margin-left: 90px;
+}
+
+div.clear {
+ clear:both;
+}
