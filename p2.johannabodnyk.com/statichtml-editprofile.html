@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<head>
+	<title>CSCI E-75 &ndash; Project 2 &ndash; Johanna Bodnyk</title>
+	<link rel="stylesheet" type="text/css" href="style.css" media="all" />
+	<link href="http://fonts.googleapis.com/css?family=Lato:300,700,900" rel="stylesheet" type="text/css">
+	<meta name="description" content="Project 2 for Fall 2012 Harvard Extension School course CSCI E-75 &ndash; Dynamic Web Applications, by Johanna Bodnyk.">
+</head>
+<body>
+	<div id="header">
+		<h1><img src="logo.png">Chirper</h1>
+		
+		<ul id="utilitynav">
+			<li>Welcome, Johanna |</li>
+			<li class="current"><a href="#">Profile</a> |</li>
+			<li><a href="#">Log Out</a></li>
+		</ul>
+		
+		<ul id="mainnav">
+			<li id="navitem1"><a href="#">Chirps</a>
+				<ul class="subnav">
+					<li class="current"><a href="#">Chirpstream</a></li>
+					<li><a href="#">Your chirps</a></li>
+				</ul>
+			</li>
+			<li id="navitem2" class="current"><a href="#">Chirpers</a>
+				<ul class="subnav">
+					<li><a href="#">Chirpers you follow</a></li>
+					<li><a href="#">Chirpers following you</a></li>
+					<li><a href="#">All chirpers</a></li>
+				</ul>
+			</li>
+			<li id="navitem3"><a href="#">Chirp!</a>
+				<ul class="subnav">
+				</ul>
+			</li>
+				<ul
+		</ul>
+	</div>
+	<div id="main">
+	
+		<h2>Edit Your Profile</h2>
+		
+		<p class="message">Welcome to Chirper! Fill out your profile so people know who you are! <br>
+		<a href="#">(Or skip this for now.)</a>
+		</p>
+		
+		<form name="edit-profile" action="#" method="post">
+			
+			<label for="first-name">First name</label>
+			<input type="text" name="first-name" id="first-name">
+		
+			<label for="last-name">Last name</label>
+			<input type="text" name="last-name" id="last-name">
+			
+			<label for="email">Email address</label>
+			<input type="email" name="email" id="email">
+			
+			<label for="password">Password</label>
+			<input type="password" name="password" id="password">
+			
+			<label for="reenter-password">Reenter password</label>
+			<input type="password" name="reenter-password" id="reenter-password">		
+			
+			<label for="location">Location</label>
+			<input type="text" name="location" id="location">
+						
+			<label for="website">Website</label>
+			<input type="url" name="website" id="website">
+							
+			<label for="photo">Photo</label>
+			<input type="file" name="photo" id="photo">					
+			
+			<label for="bio">Bio</label>
+			<textarea name="bio" id="bio" rows="15" cols="82"></textarea>	
+			
+			<input type="submit" value="Update Profile" id="submit-button">
+		</form>
+		
+		<p class="button-link"><a href="#">Cancel</a>
+		<p class="button-link delete"><a href="#">Delete Account</a>
+		
+		
+ 		<div class=clear></div>
+
+	</div>
+	<div id="footer">
+		<p>Copyright 2012 Johanna Bodnyk</p>
+	</div>
+	</body>
+</html>

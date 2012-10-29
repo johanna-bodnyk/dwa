@@ -125,19 +125,27 @@ ul#utilitynav li {
 	display:inline;
 	margin:0;
 }
-	
+
+ul#utilitynav li.current a {
+	font-weight:bold;
+}
+
+ul#utilitynav li.current a:hover {
+	color:red;
+}
+
 
 
 #main {
 	background-color:#f1f2e1;
-	padding: 0 40px 40px;
+	padding: 40px;
 	clear:both;
 }
 
 h2 {
 	clear:both;
 	font-size: 40px;
-	padding-top: 60px;
+	padding-top: 20px;
 	margin-top: 0px;
 }
 
@@ -149,9 +157,11 @@ h2 {
 	Button links 
 --------------------*/
 
+/* Large buttons */
+
 p.button-link {
  	float:left;
-	margin: 0 15px 30px 0;
+	margin: 10px 15px 40px 0;
 }
 
 p.button-link a {
@@ -162,27 +172,62 @@ p.button-link a {
 	background-color: #916f6f;
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
+	border-radius: 10px;
 }
 
-p.button-link a:hover {
+p.button-link a:hover{
 	background-color: #ccb0a6;
 }
+	
+/* Small list buttons */
+
+li.button-link {
+	margin: 0;
+}
+
+li.button-link a {
+	float: right;
+	padding: 2px 6px;
+	color: white;
+	font-size: 13px;
+	font-weight: bold;
+	background-color: #ccb0a6;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+}
+
+li.button-link a:hover {
+	background-color: #916f6f;
+}
+
+
 /*---------------------------
-	Chirp stream styles 
+	Chirp stream styles,
+	Chirper list styles
 ---------------------------*/
 
-ul#chirplist {
+ul#chirplist, ul#chirperlist {
 	list-style-type:none;
 	margin: 20px 0 0;
 	padding: 0;
 	clear: both;
 }
 
-ul#chirplist ul {
+ul#chirplist ul, ul#chirperlist ul {
 	list-style-type: none;
 	background-color: #fefefc;
-	margin: 30px 0;
 	padding: 10px;
+}
+
+ul#chirplist ul {
+	margin: 30px 0;
+
+}
+
+ul#chirperlist ul {
+	margin: 15px 0;
+
 }
 
 ul#chirplist li.avatar {
@@ -197,8 +242,22 @@ ul#chirplist li.username {
 	margin-bottom: 5px;
 }
 
+ul#chirperlist li.username {
+	font-size: 20px;
+	font-weight: bold;
+}
+
+ul#chirperlist li.followed a {
+	color: black;
+}
+
+ul#chirperlist li.followed a:hover {
+	color: red;
+}
+
+
 ul#chirplist li.chirp {
-	font-size: 24px;
+	font-size: 22px;
 	margin-bottom: 5px;
 	margin-left: 90px;
 }
@@ -209,5 +268,167 @@ ul#chirplist li.date {
 }
 
 div.clear {
- clear:both;
+	clear:both;
 }
+
+/*---------------------------
+	Profile styles
+---------------------------*/
+
+p.profile-image {
+	float: right;
+	margin-top: -70px;
+}
+
+p.profile-label {
+	clear: left;
+	width: 10%;
+	float: left;
+	font-weight: bold;
+	text-align: right;
+	padding: 10px;
+	margin: 10px 0;
+}
+
+p.profile-content {
+	width: 45%;
+	float: left;
+	background-color: #fefefc;
+	padding: 10px;
+	margin: 10px 0;
+}
+
+p.bio-label {
+	clear: both;
+	width: 10%;
+	float: left;
+	font-weight: bold;
+	text-align: right;
+	padding: 10px;
+	margin: 10px 0;
+}
+	
+p.bio-content {
+	width: 84%;
+	float: left;
+	background-color: #fefefc;
+	padding: 10px;
+	margin: 10px 0;
+}
+
+/*-------------------- 
+	Form styles
+--------------------*/
+
+form {
+	margin-top: 40px;
+}
+
+label {
+	display: block;
+	font-size: 22px;
+	font-weight: bold;
+	margin: 4px 0;
+}
+
+input {
+	display: block;
+	font-size: 20px;
+	color: #916f6f;
+	padding: 5px;
+	width: 400px;
+	margin: 4px 0 25px;
+}
+
+textarea {
+	font-size: 20px;
+	color: #916f6f;
+	font-family: Arial, sans-serif;
+	margin: 4px 0 25px;
+}
+
+input#submit-button {
+	width: auto;
+	padding: 5px 10px;
+	color: white;
+	font-size: 20px;
+	font-weight: bold;
+	background-color: #916f6f;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	float:left;
+	border: 0;
+	height: auto;
+	margin-right: 15px;
+}
+
+input#submit-button:hover {
+	background-color: #ccb0a6;
+}
+
+/* Delete account button - red */
+
+p.delete {
+	float: right;
+}
+
+p.delete a {
+	background-color: red;
+}
+
+p.delete a:hover  {
+	background-color: #ccb0a6;
+	color: red;
+}
+
+/* Homepage sign in form */
+
+#login input[type="email"],
+#login input[type="password"]  {
+	width: 325px;
+}
+
+div#login form {
+	margin-top: 0;
+}
+
+/*-------------------- 
+	Messages
+--------------------*/
+
+p.message {
+	font-size: 22px;
+}
+
+p.message a {
+	font-weight: bold;
+}
+
+/*-------------------- 
+	Homepage
+--------------------*/
+
+div#welcome {
+	float: left;
+	width: 350px;
+	margin-right: 80px
+}
+
+div#login {
+	float: left;
+	width: 350px;
+}
+
+div#welcome h2, div#login h2 {
+	margin-bottom: 30px;
+}
+
+div#welcome p {
+	font-size: 20px;
+}
+
+
+
+
+
