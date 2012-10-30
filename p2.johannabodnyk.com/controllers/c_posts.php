@@ -7,21 +7,31 @@ class posts_controller extends base_controller {
 		parent::__construct();
 
 		if(!$this->user) {
-			die("Members only. <a href='/users/login'>Please log in</a>");
+			Router::redirect('/');
+			return false;
 		}
 	}
 
 	public function index () {
-		# Set up the view
 		$this->template->content = View::instance("v_posts_index");
-		$this->template->title = "All the posts";
+		$this->template->title = "Chirper | Your Chirpstream";
 		
-		$q = "SELECT *
-			FROM posts
-			JOIN users USING(user_id)";
+		$q = "SELECT 
+			users.first_name,
+			users.last_name,
+			users.user_id,
+			posts.content,
+			posts.created
+			FROM users
+			JOIN posts USING(user_id)";
+
+		$posts = DB::instance(DB_NAME)->select_rows($q);	
 		
-		$posts = DB::instance(DB_NAME)->select_rows($q);
-				
+		# Convert timestamps to readable dates (Month XX, XXXX, XX:XXpm)
+		foreach ($posts as &$post) {
+			$post['created'] = date('F j, Y, g:i a', $post['created']);
+		}
+
 		$this->template->content->posts = $posts;
 		
 		# Render the view
@@ -54,13 +64,23 @@ class posts_controller extends base_controller {
 		$this->template->content = View::instance("v_posts_users");
 		$this->template->title = "Choose who to follow";
 		
-		$q = "SELECT * FROM users";
+		$q = "SELECT 
+			user_id,
+			first_name,
+			last_name
+			FROM `users` 
+			WHERE user_id <> ".$this->user->user_id;
 		
 		$users = DB::instance(DB_NAME)->select_rows($q);
+		
+			$q = "SELECT * 
+			FROM users_users
+			WHERE user_id = ".$this->user->user_id;
+		
+			$connections = DB::instance(DB_NAME)->select_array($q, 'user_id_followed');
 				
 		$this->template->content->users = $users;
-		
-		
+		$this->template->content->connections = $connections;
 		# Render the view
 		echo $this->template;
 	}
@@ -74,4 +94,5 @@ class posts_controller extends base_controller {
 		
 		Router::redirect('/posts/users');
 	}
+	
 }
