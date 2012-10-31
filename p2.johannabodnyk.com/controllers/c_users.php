@@ -83,7 +83,6 @@ class users_controller extends base_controller {
 		# If no user ID is passed, assume the user is trying to visit their own profile
 		if ($profile_user_id == NULL) {
 			$profile_user_id = $this->user->user_id;
-			
 		}
 		
 		# Get the profile content from the DB for the user whose profile will be dislayed	
@@ -103,19 +102,32 @@ class users_controller extends base_controller {
 		$profile_content = DB::instance(DB_NAME)->select_row($q);	
 		
 		$own_profile = FALSE;
+		$following = FALSE;
 		
+		# If we're visiting the current user's own profile
+		# set title and $own_profile for view logic
 		if ($profile_user_id == $this->user->user_id) {
 			$own_profile = TRUE;
 			$this->template->title   = 'Your profile';
 		}
 
+		# If not, set title and find out if the current user is following
+		# the user whose profile will be displayed
 		else {
 			$this->template->title = $profile_content['first_name']."'s profile";
+			
+			$q = "SELECT * 
+			FROM users_users
+			WHERE user_id_followed = ".$profile_user_id."
+			and user_id= ".$this->user->user_id;
+			
+			$following = DB::instance(DB_NAME)->select_row($q);
 		}
 		
 		$this->template->content = View::instance('v_users_profile');
 		$this->template->content->own_profile = $own_profile;
-		$this->template->content->profile_content = $profile_content;		
+		$this->template->content->profile_content = $profile_content;
+		$this->template->content->following = $following;
 		echo $this->template;	
 		
 	}
