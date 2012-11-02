@@ -203,4 +203,37 @@ class users_controller extends base_controller {
 		Router::redirect('/users/profile'); 
 
 	}
+	
+	public function delete () {
+		
+		if(!$this->user) {
+			Router::redirect('/');
+			return false;
+		}
+		
+		# Set variables for "current" navigation styles
+		$this->template->nav = "chirpers";
+		$this->template->subnav = "profile";
+		
+		# Set up the view
+		$this->template->content = View::instance("v_users_delete");
+		$this->template->title = "Delete account";
+		
+		# Render the view
+		echo $this->template;
+	}
+	
+	public function p_delete () {
+		
+		# Delete all connections involving this user
+		
+		# Delete all of this user's posts
+		
+		# Remove this user from the user table
+		
+		# Unset cookie
+		
+		Router::redirect('/'); 
+
+	}
 }

@@ -47,7 +47,7 @@
 		</form>
 		
 		<p class="button-link"><a href="/users/profile">Cancel</a>
-		<p class="button-link delete"><a href="#">Delete Account</a>
+		<p class="button-link delete"><a href="/users/delete">Delete Account</a>
 		
 		
  		<div class=clear></div>

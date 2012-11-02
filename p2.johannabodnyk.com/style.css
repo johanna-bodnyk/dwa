@@ -400,11 +400,15 @@ p.delete {
 	float: right;
 }
 
-p.delete a {
+p.delete-left {
+	float: left
+}
+
+p.delete a, p.delete-left a {
 	background-color: red;
 }
 
-p.delete a:hover  {
+p.delete a:hover, p.delete-left a:hover  {
 	background-color: #ccb0a6;
 	color: red;
 }

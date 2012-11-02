@@ -271,7 +271,7 @@ class posts_controller extends base_controller {
 			# If no users are followed yet, don't query the DB for users
 			if ($users_followed == "") {
 				$get_users = FALSE;
-				$message = "<p class='message'>You are not currently following any users. <a href='/posts/users'>Choose users to follow!</a>";
+				$message = "<p class='message'>You are not currently following any users. <a href='/posts/users'>Choose users to follow!</a></p>";
 			}
 			else {
 				# Set condition to get data only for the users already being followed
