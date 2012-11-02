@@ -1,6 +1,3 @@
-</div>
-	<div id="main">
-	
 		<h2>Sign Up</h2>
 		
 		<form name="signup" action="/users/p_signup" method="POST">
@@ -21,5 +18,3 @@
 		</form>
 		
  		<div class=clear></div>
-
-	</div>

@@ -25,6 +25,14 @@ h1 img {
 	margin-right: 13px;
 }
 
+h1 a {
+	color:black;
+}
+
+h1 a:hover{
+	color:black;
+}
+
 a {
 	text-decoration:none;
 	color:#916f6f;

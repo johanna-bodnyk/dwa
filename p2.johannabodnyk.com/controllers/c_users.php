@@ -7,7 +7,7 @@ class users_controller extends base_controller {
 	}
 	
 	public function index() {
-		echo 'welcome to the users department';
+		Router::redirect('/users/profile'); 
 	}
 
 	public function signup() {
@@ -32,7 +32,7 @@ class users_controller extends base_controller {
 		setcookie("token", $token, strtotime('+2 weeks'), '/');
 		
 		# Redirect to profile page with variable (new_user) to display welcome message
-		Router::redirect("users/edit_profile/new_user");
+		Router::redirect("/users/edit_profile/new_user");
 	}
 	
 	public function p_login () {
@@ -75,6 +75,9 @@ class users_controller extends base_controller {
 	
 	public function profile($profile_user_id = NULL) {
 		
+		$this->template->content = View::instance('v_users_profile');
+
+		
 		if(!$this->user) {
 			echo "Members only. <a href='/users/login'>Please login.</a>";
 			return false;
@@ -109,6 +112,7 @@ class users_controller extends base_controller {
 		if ($profile_user_id == $this->user->user_id) {
 			$own_profile = TRUE;
 			$this->template->title   = 'Your profile';
+			$subnav = "profile";
 		}
 
 		# If not, set title and find out if the current user is following
@@ -122,12 +126,21 @@ class users_controller extends base_controller {
 			and user_id= ".$this->user->user_id;
 			
 			$following = DB::instance(DB_NAME)->select_row($q);
+			
+			$subnav = "";
+
 		}
 		
-		$this->template->content = View::instance('v_users_profile');
+	
+		
 		$this->template->content->own_profile = $own_profile;
 		$this->template->content->profile_content = $profile_content;
 		$this->template->content->following = $following;
+		
+		# Set variables for "current" navigation styles
+		$this->template->nav = "chirpers";
+		$this->template->subnav = $subnav;
+		
 		echo $this->template;	
 		
 	}
@@ -142,9 +155,12 @@ class users_controller extends base_controller {
 		$this->template->content = View::instance('v_users_edit_profile');
 		$this->template->title   = 'Edit your profile';
 		$this->template->content->status = $status;
+		
+		# Set variables for "current" navigation styles
+		$this->template->nav = "chirpers";
+		$this->template->subnav = "profile";
+		
 		echo $this->template;
-		var_dump ($this->user);
-	
 	}
 	
 	public function p_edit_profile() {
@@ -165,7 +181,7 @@ class users_controller extends base_controller {
 		# If "Delete photo" is unchecked and no new image was submitted,
 		# do nothing -- profile_image field in DB remains as-is
 
-		# Remove "Delete photo" checkbox from $_POST array so it is not added to DB
+		# Remove "Delete photo" checkbox from $_POST array so it is included in INSERT
 		if (array_key_exists('delete_photo', $_POST)) {
 			unset($_POST['delete_photo']);
 		}
