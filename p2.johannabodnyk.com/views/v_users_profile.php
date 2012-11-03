@@ -8,7 +8,7 @@
 			?>
 		</h2>
 		
-		<p class="profile-image"><img src="/uploads/<?=$profile_content['profile_image']?>"></p>
+		<p class="profile-image"><img src="/uploads/<?=$profile_content['profile_image']?>" alt="<?=$profile_content['alt_text']?>"></p>
 		
 		<? if(!$own_profile): ?>
 			<? if ($following): ?>

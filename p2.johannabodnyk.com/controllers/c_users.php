@@ -32,7 +32,8 @@ class users_controller extends base_controller {
 		$_POST['modified'] = Time::now();
 		$_POST['profile_image'] = "placeholder.png";
 		$_POST['thumb_image'] = "placeholder_thumb.png";
-		
+		$_POST['alt_text'] = "Placeholder profile image";
+
 		
 		$token = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string());
 		$_POST['token'] = $token;
@@ -63,7 +64,7 @@ class users_controller extends base_controller {
 			";
 		$token = DB::instance(DB_NAME)->select_field($q);
 		
-		if($token == "") {
+	 	if($token == "") {
 			Router::redirect("/");
 		}
 		else {
@@ -115,6 +116,7 @@ class users_controller extends base_controller {
 			first_name, 
 			last_name,
 			profile_image,
+			alt_text,
 			email,
 			location,
 			website,
@@ -195,6 +197,7 @@ class users_controller extends base_controller {
 		if ((array_key_exists('delete_photo', $_POST)) && ($_FILES['profile_image']['name'] == "")) {
 			$_POST['profile_image'] = "placeholder.png";
 			$_POST['thumb_image'] = "placeholder_thumb.png";
+			$_POST['alt_text'] = "Placeholder profile image";
 		}
 		# If an image was submitted, upload to /uploads/ as 
 		# profile_image_[USERID]_original
@@ -216,6 +219,7 @@ class users_controller extends base_controller {
 
 			$_POST['profile_image'] = $profile_image;
 			$_POST['thumb_image'] = $thumb_image;
+			$_POST['alt_text'] = "Profile image for ".$this->user->first_name;
 
 		}
 		# If "Delete photo" is unchecked and no new image was submitted,
