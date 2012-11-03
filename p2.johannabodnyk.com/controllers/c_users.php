@@ -29,7 +29,10 @@ class users_controller extends base_controller {
 		
 		$_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
 		$_POST['created'] = Time::now();
-		$_POST['modified'] = Time::now();		
+		$_POST['modified'] = Time::now();
+		$_POST['profile_image'] = "placeholder.png";
+		$_POST['thumb_image'] = "placeholder_thumb.png";
+		
 		
 		$token = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string());
 		$_POST['token'] = $token;
@@ -94,13 +97,12 @@ class users_controller extends base_controller {
 	#	
 	public function profile($profile_user_id = NULL) {
 		
-		$this->template->content = View::instance('v_users_profile');
-
-		
 		if(!$this->user) {
-			echo "Members only. <a href='/users/login'>Please login.</a>";
+			Router::redirect('/');
 			return false;
 		}
+
+		$this->template->content = View::instance('v_users_profile');
 		
 		# If no user ID is passed, assume the user is trying to visit their own profile
 		if ($profile_user_id == NULL) {
@@ -189,22 +191,37 @@ class users_controller extends base_controller {
 	public function p_edit_profile() {
 
 		# If "Delete photo" box was checked and no new image was submitted
-		# add an empty element to $_POST array to overwrite the existing image
+		# add placeholder image file names to $_POST array to overwrite existing image
 		if ((array_key_exists('delete_photo', $_POST)) && ($_FILES['profile_image']['name'] == "")) {
-			$_POST['profile_image'] = "";
+			$_POST['profile_image'] = "placeholder.png";
+			$_POST['thumb_image'] = "placeholder_thumb.png";
 		}
 		# If an image was submitted, upload to /uploads/ as 
 		# profile_image_[USERID]_original
 		# and add the filename to the $_POST array
 		if ($_FILES['profile_image']['name'] != "") {
-			$profile_image = Upload::upload($_FILES, "/uploads/", array("jpg", "jpeg", "gif", "png", "JPG", "JPEG", "GIF", "PNG"), "profile_image_".$this->user->user_id."_original");
 		
+			$profile_image = Upload::upload($_FILES, "/uploads/", array("jpg", "jpeg", "gif", "png", "JPG", "JPEG", "GIF", "PNG"), "profile_image_".$this->user->user_id);
+			
+			$imgObj = new Image(APP_PATH."uploads/".$profile_image);
+			
+ 			$imgObj->resize(250,250,"crop");
+			$imgObj->save_image(APP_PATH."uploads/".$profile_image, 100);
+			
+			$file_parts = pathinfo($profile_image);
+			$thumb_image = "thumb_image_".$this->user->user_id.".".$file_parts['extension'];
+
+			$imgObj->resize(75,75,"crop");
+			$imgObj->save_image(APP_PATH."uploads/".$thumb_image, 100);
+
 			$_POST['profile_image'] = $profile_image;
+			$_POST['thumb_image'] = $thumb_image;
+
 		}
 		# If "Delete photo" is unchecked and no new image was submitted,
 		# do nothing -- profile_image field in DB remains as-is
 
-		# Remove "Delete photo" checkbox from $_POST array so it is included in INSERT
+		# Remove "Delete photo" checkbox from $_POST array
 		if (array_key_exists('delete_photo', $_POST)) {
 			unset($_POST['delete_photo']);
 		}
@@ -223,7 +240,10 @@ class users_controller extends base_controller {
 		# Update DB with new profile information (including deleting empty fields)
 		DB::instance(DB_NAME)->update("users", $_POST, "WHERE token = '".$this->user->token."'");		
 	
-		Router::redirect('/users/profile'); 
+ 		Router::redirect('/users/profile'); 
+			
+ 
+
 
 	}
 	

@@ -109,6 +109,7 @@ class posts_controller extends base_controller {
 			users.first_name,
 			users.last_name,
 			users.user_id,
+			users.thumb_image,
 			posts.post_id,
 			posts.content,
 			posts.created

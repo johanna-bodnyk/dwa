@@ -9,7 +9,7 @@
 		<? foreach($posts as $post): ?>
 			<li>
 				<ul>
-					<li class="avatar"><a href="/users/profile/<?=$post['user_id']?>"><img src="/matthew.jpg"></a></li>
+					<li class="avatar"><a href="/users/profile/<?=$post['user_id']?>"><img src="/uploads/<?=$post['thumb_image']?>"></a></li>
 					<!-- If viewing the current user's chirps, add delete buttons -->
 					<? if($post['user_id'] == $user->user_id): ?>
 						<li class="button-link"><a href='/posts/delete/<?=$post['post_id']?>'>Delete</a>
