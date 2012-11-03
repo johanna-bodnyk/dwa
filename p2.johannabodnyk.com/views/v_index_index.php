@@ -7,7 +7,7 @@
 		<div id="login">
 			<h2>Sign in!</h2>
 			<?=$message?>
-			<form name="login" action="users/p_login" method="POST">
+			<form name="login" action="/users/p_login" method="POST">
 							
 				<label for="email">Email address</label>
 				<input type="email" name="email" id="email">

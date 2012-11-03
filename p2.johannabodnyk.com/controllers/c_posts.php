@@ -14,8 +14,7 @@ class posts_controller extends base_controller {
 	}
 	
 	#
-	# Main posts page should go to posts/stream page (need variables for stream page, 
-	# otherwise it could be the index)
+	# Main posts page is really posts/stream page
 	#
 	public function index () {
 		Router::redirect('/posts/stream'); 
@@ -33,9 +32,38 @@ class posts_controller extends base_controller {
 		$get_posts = TRUE;
 		$message = "";
 
-		# If no subset variable is defined, show all posts 
-		# from users the current user is following
-		if ($post_subset == NULL) {
+
+		# If subset variable is "yours" show the current user's posts
+		if ($post_subset == "yours") {
+			$this->template->title = "Your Chirps";
+			$subnav = "your_chirps";
+			
+			#Set the posts query condition to only get posts with the current user's ID
+			$condition = "=".$this->user->user_id;			
+
+		}
+		
+		# If subset variable is a number, display posts matching that user ID
+ 		else if (is_numeric($post_subset)) {
+			
+			# Get the first name for that user for the page title and h2
+			$q = "SELECT first_name
+				FROM users
+				WHERE user_id = ".$post_subset;
+			$chirper_name = DB::instance(DB_NAME)->select_field($q);
+			$this->template->title = $chirper_name."'s Chirps";
+			
+			# Pass the first name in for the h2
+ 			$this->template->content->chirper_name = $chirper_name;
+ 			$subnav = "";
+
+			#Set the posts query condition to only get posts with that user's ID
+			$condition = "=".$post_subset;			
+		} 
+		
+		# Otherwise (if no subset variable is defined or something else is used),
+		# show all posts from users the current user is following
+		else {
 						
 			$this->template->title = "Chirpstream";
 			$subnav = "chirpstream";
@@ -59,50 +87,22 @@ class posts_controller extends base_controller {
 			# Remove the trailing comma
 			$users_followed = rtrim($users_followed, ",");
 			
-			# If no users are followed yet, we won't query the DB for posts,
+			# If no users are followed yet, don't query the DB for posts,
 			# and will display a message instead
 			if ($users_followed == "") {
 				$get_posts = FALSE;
 				$message = "<p class='message'>You are not currently following any users. <a href='/posts/users'>Choose users to follow!</a></p>";
 				$posts = "";
 			}
-			# If users are being followed, we'll set the posts query condition
+			# If users are being followed, set the posts query condition
 			# to only get posts with those users' IDs
 			else {
  				$condition = "IN (".$users_followed.")";			
 			}
 		}
-			
-
-		# If subset variable is "yours" show the current user's posts
-		else if ($post_subset == "yours") {
-			$this->template->title = "Your Chirps";
-			$subnav = "your_chirps";
-			
-			#Set the posts query condition to only get posts with the current user's ID
-			$condition = "=".$this->user->user_id;			
-
-		}
 		
-		# Otherwise -- if there's a subset variable and it's not "yours" --
-		# it should be a user ID, so we'll display posts matching that ID
- 		else {
-			# Get the first name for that user for the page title and h2
-			$q = "SELECT first_name
-				FROM users
-				WHERE user_id = ".$post_subset;
-			$chirper_name = DB::instance(DB_NAME)->select_field($q);
-			$this->template->title = $chirper_name."'s Chirps";
-			
-			# Pass the first name in for the h2
- 			$this->template->content->chirper_name = $chirper_name;
- 			$subnav = "";
-
-			#Set the posts query condition to only get posts with that user's ID
-			$condition = "=".$post_subset;			
-		} 
-		
-		# Unless we set get_posts to FALSE (because there are no users being followed),
+		# Unless we set get_posts to FALSE 
+		# (because there are no users being followed),
 		# query the DB to get the posts to be displayed
 		if ($get_posts == TRUE) {
 			# Build query for users using the condition
@@ -154,15 +154,24 @@ class posts_controller extends base_controller {
 	#
 	# Add post form
 	#
-	public function add () {
+	public function add ($error = NULL) {
+		
+		# Check for error variable and set error message accordingly
+		if ($error == "error") {
+			$message = "<p class='message error'>You forgot to type something!</a></p>";
+		}
+		else {
+			$message = "";
+		}
+
+		# Set up the view
+		$this->template->content = View::instance("v_posts_add");
+		$this->template->title = "Chirp!";
+		$this->template->content->message = $message;
 		
 		# Set variables for "current" navigation styles
 		$this->template->nav = "chirp";
 		$this->template->subnav = "";
-		
-		# Set up the view
-		$this->template->content = View::instance("v_posts_add");
-		$this->template->title = "Chirp!";
 		
 		# Render the view
 		echo $this->template;
@@ -172,27 +181,46 @@ class posts_controller extends base_controller {
 	# Add post form processing
 	#
 	public function p_add() {
-		$_POST['created'] = Time::now();
-		$_POST['modified'] = Time::now();
-		$_POST['user_id'] = $this->user->user_id;
-		DB::instance(DB_NAME)->insert('posts', $_POST);
-		Router::redirect('/posts/stream/yours');
+		
+		# Check to see if content was entered
+		# If not, redirect to add post page with variable to trigger error message
+		if ($_POST['content'] == "") {
+			Router::redirect('/posts/add/error');
 		}
+		
+		# If so, add to DB with created and modified set to now
+		else {
+			$_POST['created'] = Time::now();
+			$_POST['modified'] = Time::now();
+			$_POST['user_id'] = $this->user->user_id;
+			DB::instance(DB_NAME)->insert('posts', $_POST);
+			Router::redirect('/posts/stream/yours');
+		}
+	}	
 		
 	#
 	# Delete a post
 	#
 	public function delete($post_id = NULL) {
 		
-		# Post to be deleted must match on post_id and user_id of current user
-		# to prevent users from altering URL to delete other people's posts
-		$where_condition = "WHERE
-			user_id = ".$this->user->user_id."
-			AND post_id = ".$post_id;
+		# Sanitize by ensuring $post_id is numeric 
+		if (is_numeric($post_id)) {
 			
-		DB::instance(DB_NAME)->delete("posts", $where_condition);
+			# Ensure to be deleted matches on post_id AND user_id of current user
+			# to prevent users from altering URL to delete other people's posts
+			$where_condition = "WHERE
+				user_id = ".$this->user->user_id."
+				AND post_id = ".$post_id;
+				
+			DB::instance(DB_NAME)->delete("posts", $where_condition);
+			
+			Router::redirect('/posts/stream/yours');
+		}
+		else {
+			Router::redirect('/posts/stream/yours');
+			return false;
+		}
 		
-		Router::redirect('/posts/stream/yours');
 	}
 
 	#
@@ -206,14 +234,14 @@ class posts_controller extends base_controller {
 		$get_users = TRUE;
 		
 		# Get the list of user_ids this user is following,  
-		# for the view and in case $subset = "followed"
+		# for the view and to check against if $subset = "followed"
 		$q = "SELECT * 
 		FROM users_users
 		WHERE user_id = ".$this->user->user_id;
 	
 		$connections = DB::instance(DB_NAME)->select_array($q, 'user_id_followed');
 		
-		# If $subset = following_you, we want to display only those 
+		# If $subset = following_you, display only those 
 		# users who are following the current user
 		if ($subset == "following_you") {
 
@@ -251,7 +279,7 @@ class posts_controller extends base_controller {
 			
 		}
 			
-		# If $subset = followed, we want to display only those 
+		# If $subset = followed, display only those 
 		# users who the current user is already following
 		elseif ($subset == "followed") {
 			
@@ -281,15 +309,19 @@ class posts_controller extends base_controller {
 			}
 		}
 		
-		# If $subset = NULL (or anything else) we want to display all users except the current user	
+		# If $subset = NULL (or anything else) display all users 
+		# except the current user	
 		else {
 			$this->template->title = "All chirpers";
 			$subnav = "all";
 			$condition = "<> ".$this->user->user_id;			
 		}
 		
+		# Unless the $subset is following_you or followed 
+		# and there are no users to display
+		# (in which case $get_users should be set to FALSE),
+		# build query for $users using condition based on subset
 		if ($get_users == TRUE) {
-			# Build query for users using condition based on subset
 			$q = "SELECT 
 				user_id,
 				first_name,
@@ -321,11 +353,19 @@ class posts_controller extends base_controller {
 	# Follow a user
 	#
 	public function follow($user_id_followed = NULL, $source_page = NULL) {
-		$data['created'] = Time::now();
-		$data['user_id'] = $this->user->user_id;
-		$data['user_id_followed'] = $user_id_followed;
 		
-		DB::instance(DB_NAME)->insert("users_users", $data);
+		# Sanitize by ensuring $user_id_followed is numeric 
+		if (is_numeric($user_id_followed)) {
+			$data['created'] = Time::now();
+			$data['user_id'] = $this->user->user_id;
+			$data['user_id_followed'] = $user_id_followed;
+			
+			DB::instance(DB_NAME)->insert("users_users", $data);
+		}
+		else {
+			Router::redirect('/posts/users/'.$source_page);
+			return false;
+		}
 		
 		if ($source_page == "profile") {
 			Router::redirect('/users/profile/'.$user_id_followed);
@@ -339,12 +379,19 @@ class posts_controller extends base_controller {
 	# Stop following a user
 	#
 	public function unfollow($user_id_followed = NULL, $source_page = NULL) {
-		
-		$where_condition = "WHERE
-			user_id = ".$this->user->user_id."
-			AND user_id_followed = ".$user_id_followed;
-			
-		DB::instance(DB_NAME)->delete("users_users", $where_condition);
+
+		# Sanitize by ensuring $user_id_followed is numeric 
+		if (is_numeric($user_id_followed)) {
+			$where_condition = "WHERE
+				user_id = ".$this->user->user_id."
+				AND user_id_followed = ".$user_id_followed;
+				
+			DB::instance(DB_NAME)->delete("users_users", $where_condition);
+		}
+		else {
+			Router::redirect('/posts/users/'.$source_page);
+			return false;
+		}
 		
 		if ($source_page == "profile") {
 			Router::redirect('/users/profile/'.$user_id_followed);

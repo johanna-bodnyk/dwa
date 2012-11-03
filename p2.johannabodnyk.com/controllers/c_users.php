@@ -27,14 +27,19 @@ class users_controller extends base_controller {
 	#
 	public function p_signup () {
 		
+		# Add salt and hash password
 		$_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
+		
+		# Set created and modified to current time and add to POST array
 		$_POST['created'] = Time::now();
 		$_POST['modified'] = Time::now();
+		
+		# Add placeholder images and alt text to POST array
 		$_POST['profile_image'] = "placeholder.png";
 		$_POST['thumb_image'] = "placeholder_thumb.png";
 		$_POST['alt_text'] = "Placeholder profile image";
 
-		
+		# Create initial token and add to POST array
 		$token = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string());
 		$_POST['token'] = $token;
 		
@@ -53,10 +58,13 @@ class users_controller extends base_controller {
 	#
 	public function p_login () {
 
+		# Sanitize data entered in login form
 		$_POST = DB::instance(DB_NAME)->sanitize($_POST);
 		
+		# Hash password and add salt
 		$_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
 		
+		# Get token from DB for submitted email/password combination
 		$q = "SELECT token
 			FROM users
 			WHERE email = '".$_POST['email']."'
@@ -64,15 +72,17 @@ class users_controller extends base_controller {
 			";
 		$token = DB::instance(DB_NAME)->select_field($q);
 		
-	 	if($token == "") {
+	 	# If no token was returned, submitted password/combination does not exist
+		# so return to homepage with variable to trigger error message
+		if($token == "") {
 			Router::redirect("/index/index/error");
 		}
+		# Otherwise, set cookie using token and redirect to landing page
 		else {
 			setcookie("token", $token, strtotime('+2 weeks'), '/');
 			Router::redirect("/posts");
 		}
 	
-		echo "Here is the token".$token;
 	}
 	
 	#
@@ -98,19 +108,23 @@ class users_controller extends base_controller {
 	#	
 	public function profile($profile_user_id = NULL) {
 		
+		# Authenticate
 		if(!$this->user) {
 			Router::redirect('/');
 			return false;
 		}
-
+		
 		$this->template->content = View::instance('v_users_profile');
 		
-		# If no user ID is passed, assume the user is trying to visit their own profile
-		if ($profile_user_id == NULL) {
+		# If no user ID is passed, or a non-numeric ID is passed,
+		# assume the user is trying to visit their own profile
+		# and set $profile_user_id to current user's ID
+		if (($profile_user_id == NULL) OR (!is_numeric($profile_user_id))) {
 			$profile_user_id = $this->user->user_id;
 		}
 		
 		# Get the profile content from the DB for the user whose profile will be dislayed	
+		# based on $profile_user_id
 		$q = "SELECT 
 			user_id,
 			first_name, 
@@ -127,7 +141,6 @@ class users_controller extends base_controller {
 
 		$profile_content = DB::instance(DB_NAME)->select_row($q);	
 		
-		$own_profile = FALSE;
 		$following = FALSE;
 		
 		# If we're visiting the current user's own profile
@@ -138,9 +151,11 @@ class users_controller extends base_controller {
 			$subnav = "profile";
 		}
 
-		# If not, set title and find out if the current user is following
-		# the user whose profile will be displayed
+		# If not, set title and set $following based on whether
+		# the current user is following the user whose profile will be displayed
 		else {
+			$own_profile = FALSE;
+			
 			$this->template->title = $profile_content['first_name']."'s profile";
 			
 			$q = "SELECT * 
@@ -151,7 +166,6 @@ class users_controller extends base_controller {
 			$following = DB::instance(DB_NAME)->select_row($q);
 			
 			$subnav = "";
-
 		}
 		
 		$this->template->content->own_profile = $own_profile;

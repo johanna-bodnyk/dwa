@@ -20,7 +20,7 @@ class index_controller extends base_controller {
 			# Check whether homepage is reloading after a failed login attempt
 			# If so, send an error message to the view
 			if ($error == "error") {
-				$message = "<p class='message error'>Login failed. Please check your email and password and try again.</a>";
+				$message = "<p class='message error'>Login failed. Please check your email and password and try again.</a></p>";
 			}
 			else {
 				$message = "";
