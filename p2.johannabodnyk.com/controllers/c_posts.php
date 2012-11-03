@@ -14,14 +14,14 @@ class posts_controller extends base_controller {
 	
 	#
 	# Main posts page should go to posts/stream page (need variables for stream page, 
-	# otherwise it could be the index
+	# otherwise it could be the index)
 	#
 	public function index () {
 		Router::redirect('/posts/stream'); 
 	}
 		
 	#
-	# List of chirps -- of all users being followed, one user, or current user
+	# List of posts -- of all users being followed, one user, or current user
 	#
 	public function stream ($post_subset = NULL) {
 		
@@ -84,7 +84,7 @@ class posts_controller extends base_controller {
 		}
 		
 		# Otherwise -- if there's a subset variable and it's not "yours" --
-		# it should be a user ID, so we'll display that user's posts
+		# it should be a user ID, so we'll display posts matching that ID
  		else {
 			# Get the first name for that user for the page title and h2
 			$q = "SELECT first_name
@@ -121,10 +121,9 @@ class posts_controller extends base_controller {
 			$posts = DB::instance(DB_NAME)->select_rows($q);
 	
 			# If we're going to the current user's list of chirps
-			# AND the posts array is empty (they haven't chirped yet), 
+			# and the posts array is empty (they haven't chirped yet), 
 			# display a message instead of the list of chirps
 			if (($post_subset == "yours") && (!$posts)) {
-				$get_posts = FALSE;
 				$message = "<p class='message'>You haven't chirped yet! <a href='/posts/add'>Say something!</a>";
 				$posts = "";
 			}
@@ -147,10 +146,10 @@ class posts_controller extends base_controller {
 
 		# Render the view
 		echo $this->template;
-	
 	}
+
 	#
-	# Form to add a post
+	# Add post form
 	#
 	public function add () {
 		
@@ -167,7 +166,7 @@ class posts_controller extends base_controller {
 	}
 	
 	#
-	# Function to add a post
+	# Add post form processing
 	#
 	public function p_add() {
 		$_POST['created'] = Time::now();
@@ -194,7 +193,7 @@ class posts_controller extends base_controller {
 	}
 
 	#
-	# List of users -- all, being followed, and following you
+	# List of users -- all, being followed, and following current user
 	#		
 	public function users($subset = NULL) {
 		

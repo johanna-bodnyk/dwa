@@ -6,16 +6,25 @@ class users_controller extends base_controller {
 		parent::__construct();
 	}
 	
+	#
+	# Main users page should go to profile page
+	#
 	public function index() {
 		Router::redirect('/users/profile'); 
 	}
 
+	#
+	# Sign-up form
+	#
 	public function signup() {
 		$this->template->content = View::instance('v_users_signup');
 		$this->template->title   = 'Signup';
 		echo $this->template;
 		}
-		
+
+	#
+	# Sign-up form processing
+	#
 	public function p_signup () {
 		
 		$_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
@@ -35,6 +44,9 @@ class users_controller extends base_controller {
 		Router::redirect("/users/edit_profile/new_user");
 	}
 	
+	#
+	# Log-in processing
+	#
 	public function p_login () {
 
 		$_POST = DB::instance(DB_NAME)->sanitize($_POST);
@@ -58,6 +70,10 @@ class users_controller extends base_controller {
 	
 		echo "Here is the token".$token;
 	}
+	
+	#
+	# Log out
+	#
 	public function logout() {
 		
 		# Create a new token and array with field name and value of new token
@@ -72,7 +88,10 @@ class users_controller extends base_controller {
 
 		Router::redirect("/");
 	}
-	
+
+	#
+	# Profile page -- current user's and other users'
+	#	
 	public function profile($profile_user_id = NULL) {
 		
 		$this->template->content = View::instance('v_users_profile');
@@ -131,8 +150,6 @@ class users_controller extends base_controller {
 
 		}
 		
-	
-		
 		$this->template->content->own_profile = $own_profile;
 		$this->template->content->profile_content = $profile_content;
 		$this->template->content->following = $following;
@@ -145,6 +162,9 @@ class users_controller extends base_controller {
 		
 	}
 	
+	#
+	# Edit profile form
+	#
 	public function edit_profile($status = NULL) {
 
 		if(!$this->user) {
@@ -162,7 +182,10 @@ class users_controller extends base_controller {
 		
 		echo $this->template;
 	}
-	
+
+	#
+	# Edit profile form processing
+	#	
 	public function p_edit_profile() {
 
 		# If "Delete photo" box was checked and no new image was submitted
@@ -204,6 +227,9 @@ class users_controller extends base_controller {
 
 	}
 	
+	#
+	# Delete account confirmation page
+	#	
 	public function delete () {
 		
 		if(!$this->user) {
@@ -223,17 +249,38 @@ class users_controller extends base_controller {
 		echo $this->template;
 	}
 	
+	#
+	# Delete account processing
+	#		
 	public function p_delete () {
 		
+		if(!$this->user) {
+			Router::redirect('/');
+			return false;
+		}
+		
 		# Delete all connections involving this user
-		
+		$where_condition = "WHERE
+			user_id = ".$this->user->user_id."
+			OR user_id_followed = ".$this->user->user_id;
+			
+		DB::instance(DB_NAME)->delete("users_users", $where_condition);
+
 		# Delete all of this user's posts
-		
+		$where_condition = "WHERE
+			user_id = ".$this->user->user_id;
+			
+		DB::instance(DB_NAME)->delete("posts", $where_condition);
+
 		# Remove this user from the user table
+		$where_condition = "WHERE
+			user_id = ".$this->user->user_id;
+			
+		DB::instance(DB_NAME)->delete("users", $where_condition);
 		
 		# Unset cookie
+		setcookie("token", "", strtotime('-1 year'), '/');
 		
 		Router::redirect('/'); 
-
-	}
+	}	
 }
