@@ -16,41 +16,74 @@ class users_controller extends base_controller {
 	#
 	# Sign-up form
 	#
-	public function signup() {
+	public function signup($error = NULL) {
 		$this->template->content = View::instance('v_users_signup');
-		$this->template->title   = 'Signup';
-		echo $this->template;
+		
+		# Check whether form is reloading after a failed signup attempt
+		# If so, send an error message to the view
+		if ($error == "error") {
+			$message = "<p class='message error'>All fields are required. Please try again.</p>";
 		}
+		else {
+			$message = "";
+		}
+		
+		$this->template->title   = 'Signup';
+		$this->template->content->message = $message;
+
+		echo $this->template;
+	}
 
 	#
 	# Sign-up form processing
 	#
 	public function p_signup () {
 		
-		# Add salt and hash password
-		$_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
+		echo Debug::dump($_POST,"Contents of POST");
+		 
+		# Check to see whether all fields in sign-up form were filled in
+		# (Ran out of time to do sophisticated error-checking here - sorry!)
+		$missing_data = FALSE;
+		 
+		foreach ($_POST as $field) {
+			if ($field == "") {
+				$missing_data = TRUE;
+			}
+		}
 		
-		# Set created and modified to current time and add to POST array
-		$_POST['created'] = Time::now();
-		$_POST['modified'] = Time::now();
+		# If any fields are empty, redirect to sign-up form 
+		# with variable to trigger error message
+		if ($missing_data) {
+			Router::redirect("/users/signup/error");
+		}
 		
-		# Add placeholder images and alt text to POST array
-		$_POST['profile_image'] = "placeholder.png";
-		$_POST['thumb_image'] = "placeholder_thumb.png";
-		$_POST['alt_text'] = "Placeholder profile image";
+		# Otherwise, create new user account
+		else {
+			# Add salt and hash password
+			$_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
+			
+			# Set created and modified to current time and add to POST array
+			$_POST['created'] = Time::now();
+			$_POST['modified'] = Time::now();
+			
+			# Add placeholder images and alt text to POST array
+			$_POST['profile_image'] = "placeholder.png";
+			$_POST['thumb_image'] = "placeholder_thumb.png";
+			$_POST['alt_text'] = "Placeholder profile image";
 
-		# Create initial token and add to POST array
-		$token = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string());
-		$_POST['token'] = $token;
-		
-		# Create DB record for user
-		DB::instance(DB_NAME)->insert('users', $_POST);
-		
-		# Set cookie so new user is logged in
-		setcookie("token", $token, strtotime('+2 weeks'), '/');
-		
-		# Redirect to edit profile page with variable (new_user) to trigger welcome message
-		Router::redirect("/users/edit_profile/new_user");
+			# Create initial token and add to POST array
+			$token = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string());
+			$_POST['token'] = $token;
+			
+			# Create DB record for user
+			DB::instance(DB_NAME)->insert('users', $_POST);
+			
+			# Set cookie so new user is logged in
+			setcookie("token", $token, strtotime('+2 weeks'), '/');
+			
+			# Redirect to edit profile page with variable (new_user) to trigger welcome message
+			Router::redirect("/users/edit_profile/new_user");
+		}
 	}
 	
 	#
@@ -260,11 +293,27 @@ class users_controller extends base_controller {
 			$_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
 		}
 		
-		# If not, remove password element from $_POST array so existing password isn't overwritten
+		# If not, remove password element from POST array so existing password isn't overwritten
 		else {
 			unset($_POST['password']);
 		}
 
+		# First name, last name, and email are required.
+		# If those elements in the array are blank, remove them from the POST array
+		# so that existing values are not overwritten
+		# (Ran out of time to do sophisticated error-checking on required fields - sorry!)
+		if ($_POST['first_name'] == "") {
+			unset($_POST['first_name']);
+		}
+		if ($_POST['last_name'] == "") {
+			unset($_POST['last_name']);
+		}
+		if ($_POST['email'] == "") {
+			unset($_POST['email']);
+		}
+		
+
+		
 		# Update DB with new profile information (including empty fields)
 		DB::instance(DB_NAME)->update("users", $_POST, "WHERE token = '".$this->user->token."'");		
 	

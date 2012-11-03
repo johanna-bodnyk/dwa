@@ -2,6 +2,8 @@
 		
 		<form name="signup" action="/users/p_signup" method="POST">
 			
+			<?=$message?>
+			
 			<label for="first-name">First name</label>
 			<input type="text" name="first_name" id="first-name">
 		
