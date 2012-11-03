@@ -164,3 +164,6 @@ pip-log.txt
 
 # Framework for DWA class
 environment.php
+
+# DWA p2
+uploads/
