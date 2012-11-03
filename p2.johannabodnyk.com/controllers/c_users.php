@@ -44,7 +44,7 @@ class users_controller extends base_controller {
 		# Set cookie so new user is logged in
 		setcookie("token", $token, strtotime('+2 weeks'), '/');
 		
-		# Redirect to profile page with variable (new_user) to display welcome message
+		# Redirect to edit profile page with variable (new_user) to trigger welcome message
 		Router::redirect("/users/edit_profile/new_user");
 	}
 	
@@ -65,7 +65,7 @@ class users_controller extends base_controller {
 		$token = DB::instance(DB_NAME)->select_field($q);
 		
 	 	if($token == "") {
-			Router::redirect("/");
+			Router::redirect("/index/index/error");
 		}
 		else {
 			setcookie("token", $token, strtotime('+2 weeks'), '/');
@@ -175,10 +175,19 @@ class users_controller extends base_controller {
 			Router::redirect('/');
 			return false;
 		}
+		
+		# Check for variable indicating a redirect from the sign-up form,
+		# and if so set $message to show a welcome messages
+		if($status == "new_user") {
+			$message = "<p class='message'>Welcome to Chirper! Fill out your profile so people know who you are! <br> <a href='/posts'>(Or skip this for now.)</a></p>";
+		}
+		else {
+			$message = "";
+		}
 						
 		$this->template->content = View::instance('v_users_edit_profile');
 		$this->template->title   = 'Edit your profile';
-		$this->template->content->status = $status;
+		$this->template->content->message = $message;
 		
 		# Set variables for "current" navigation styles
 		$this->template->nav = "chirpers";
@@ -222,32 +231,30 @@ class users_controller extends base_controller {
 			$_POST['alt_text'] = "Profile image for ".$this->user->first_name;
 
 		}
+		
 		# If "Delete photo" is unchecked and no new image was submitted,
 		# do nothing -- profile_image field in DB remains as-is
 
-		# Remove "Delete photo" checkbox from $_POST array
+		# Remove "Delete photo" checkbox from $_POST array if it exists
 		if (array_key_exists('delete_photo', $_POST)) {
 			unset($_POST['delete_photo']);
 		}
 		
-		# Check to see if a password was submitted.
-		# If so, add salt and hash
+		# Check to see if a password was submitted. If so, add salt and hash.
 		if ($_POST['password'] != "") {
 		
 			$_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
 		}
+		
 		# If not, remove password element from $_POST array so existing password isn't overwritten
 		else {
 			unset($_POST['password']);
 		}
 
-		# Update DB with new profile information (including deleting empty fields)
+		# Update DB with new profile information (including empty fields)
 		DB::instance(DB_NAME)->update("users", $_POST, "WHERE token = '".$this->user->token."'");		
 	
  		Router::redirect('/users/profile'); 
-			
- 
-
 
 	}
 	
@@ -283,20 +290,20 @@ class users_controller extends base_controller {
 			return false;
 		}
 		
-		# Delete all connections involving this user
+		# Delete all connections involving current user
 		$where_condition = "WHERE
 			user_id = ".$this->user->user_id."
 			OR user_id_followed = ".$this->user->user_id;
 			
 		DB::instance(DB_NAME)->delete("users_users", $where_condition);
 
-		# Delete all of this user's posts
+		# Delete all of current user's posts
 		$where_condition = "WHERE
 			user_id = ".$this->user->user_id;
 			
 		DB::instance(DB_NAME)->delete("posts", $where_condition);
 
-		# Remove this user from the user table
+		# Remove current user from the user table
 		$where_condition = "WHERE
 			user_id = ".$this->user->user_id;
 			

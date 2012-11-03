@@ -436,6 +436,10 @@ p.message a {
 	font-weight: bold;
 }
 
+p.error {
+	color: red;
+}
+
 /*-------------------- 
 	Homepage
 --------------------*/

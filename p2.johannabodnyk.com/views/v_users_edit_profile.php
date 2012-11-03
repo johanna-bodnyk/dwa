@@ -2,11 +2,7 @@
 		
 		<!--If this is a new user's first time on this page (redirected from sign-up form), display a welcome message -->
 			
-			<? if($status == "new_user"): ?>
-				<p class="message">Welcome to Chirper! Fill out your profile so people know who you are! <br>
-				<a href="/posts">(Or skip this for now.)</a>
-				</p>
-			<? endif; ?> 
+		<?=$message?>
 		
 		<form name="edit-profile" action="/users/p_edit_profile" method="POST" enctype="multipart/form-data">
 			

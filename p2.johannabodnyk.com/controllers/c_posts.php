@@ -10,6 +10,7 @@ class posts_controller extends base_controller {
 			Router::redirect('/');
 			return false;
 		}
+
 	}
 	
 	#
@@ -62,7 +63,7 @@ class posts_controller extends base_controller {
 			# and will display a message instead
 			if ($users_followed == "") {
 				$get_posts = FALSE;
-				$message = "<p class='message'>You are not currently following any users. <a href='/posts/users'>Choose users to follow!</a>";
+				$message = "<p class='message'>You are not currently following any users. <a href='/posts/users'>Choose users to follow!</a></p>";
 				$posts = "";
 			}
 			# If users are being followed, we'll set the posts query condition
@@ -252,7 +253,7 @@ class posts_controller extends base_controller {
 			
 		# If $subset = followed, we want to display only those 
 		# users who the current user is already following
-		if ($subset == "followed") {
+		elseif ($subset == "followed") {
 			
 			$this->template->title = "Chirpers you follow";
 			$subnav = "followed";
@@ -280,8 +281,8 @@ class posts_controller extends base_controller {
 			}
 		}
 		
-		# If $subset = NULL, we want to display all users except the current user	
-		if ($subset == NULL) {
+		# If $subset = NULL (or anything else) we want to display all users except the current user	
+		else {
 			$this->template->title = "All chirpers";
 			$subnav = "all";
 			$condition = "<> ".$this->user->user_id;			
@@ -296,8 +297,8 @@ class posts_controller extends base_controller {
 				FROM `users` 
 				WHERE user_id ".$condition;
 			$users = DB::instance(DB_NAME)->select_rows($q);
-			$message = "";		
-		}
+ 			$message = "";		
+ 		}
 		else {
 			$users = "";
 		}
@@ -305,8 +306,8 @@ class posts_controller extends base_controller {
 		$this->template->content->users = $users;
 		$this->template->content->connections = $connections;
 		$this->template->content->subset = $subset;
-		$this->template->content->message = $message;
-		
+ 		$this->template->content->message = $message;
+ 		
 		# Set variables for "current" navigation styles
 		$this->template->nav = "chirpers";
 		$this->template->subnav = $subnav;		
