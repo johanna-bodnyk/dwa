@@ -17,9 +17,9 @@
 
 <body>	
 
-	<!-- Header -- logo and navigation (navigation displays only if user is logged in) -->
+	<!-- Header - logo and navigation (navigation displays only if user is logged in) -->
 	<div id="header">
-		<h1><a href="/"><img src="/logo.png">Chirper</a></h1>
+		<h1><a href="/"><img src="/logo.png" alt="logo">Chirper</a></h1>
 		
 		<!-- Secondary (top right) navigation -->
  		<? if ($user): ?>
