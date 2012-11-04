@@ -3,7 +3,7 @@
 		<div id="welcome">
 			<h2>Welcome!</h2>
 			<p>Chirper is a fun and easy way to let everyone know what you are doing at all times, whether or not they care! Create an account to get started right now!</p>
-			<p class="button-link"><a href="users/signup">Sign up!</a>
+			<p class="button-link"><a href="/users/signup">Sign up!</a>
 		</div>
 		
 		<!-- Login form (right column) -->
