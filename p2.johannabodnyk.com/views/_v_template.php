@@ -94,7 +94,7 @@
 	
 	</div>
 	
-	<!-- Footer arae -->
+	<!-- Footer area -->
 	<div id="footer">
 		<p>Copyright 2012 Johanna Bodnyk</p>
 	</div>

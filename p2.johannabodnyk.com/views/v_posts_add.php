@@ -1,5 +1,7 @@
 		<h2>Say something!</h2>
 		
+		<!-- Add post form -->
+
 		<form name="add-chirp" action="/posts/p_add" method="POST">
 			
 			<?=$message?>

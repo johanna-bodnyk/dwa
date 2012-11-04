@@ -1,9 +1,11 @@
 		<?=$message?>
 
+		<!-- H2 - only if viewing a single user's chirps -->
 		<? if(isset($chirper_name)): ?>
 		<h2><?=$chirper_name?>'s Chirps</h2>
 		<? endif; ?>
 		
+		<!-- Chirp list -->
 		<? if($posts): ?>
 		<ul id="chirplist">
 		<? foreach($posts as $post): ?>

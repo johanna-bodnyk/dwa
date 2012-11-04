@@ -1,11 +1,11 @@
 		<?=$message?>
 		
+		<!-- User list -->
 		<? if($users): ?>
 		<ul id="chirperlist">
 			<? foreach($users as $user): ?>
 				<li><ul>
-					<li class="button-link">
-						
+					<li class="button-link">		
 						<!-- If this user is currently being followed, show button to unfollow and add li class "followed" -->
 						<? if(isset($connections[$user['user_id']])): ?>
 							<a href='/posts/unfollow/<?=$user['user_id']."/".$subset?>'>Stop following</a>

@@ -1,5 +1,6 @@
 		<h2>Sign Up</h2>
 		
+		<!-- Sign up form -->
 		<form name="signup" action="/users/p_signup" method="POST">
 			
 			<?=$message?>
