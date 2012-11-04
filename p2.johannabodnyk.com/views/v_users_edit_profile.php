@@ -32,7 +32,7 @@
 				<!-- If user has an existing uploaded image, display current image -->
 				<? if ($user->profile_image != "placeholder.png"): ?>
 					<p class="instructions">Current photo:</p>
-					<img src="/uploads/<?=$user->profile_image?>">
+					<img src="/uploads/<?=$user->profile_image?>" alt="<?=$user->alt_text?>">
 					<p class="instructions">To replace the current photo, choose a new file from your computer:</p>
 				<? endif; ?>
 				
