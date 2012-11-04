@@ -14,6 +14,7 @@ class index_controller extends base_controller {
 		# If user is not logged in, load the homepage
 		if (!$this->user) {
 			
+			# Set up the view 
 			$this->template->content = View::instance('v_index_index');
 			$this->template->title = "Welcome to Chirper";
 	
@@ -26,15 +27,12 @@ class index_controller extends base_controller {
 				$message = "";
 			}
 			
+			# Send necessary data/variables to the view
 			$this->template->content->message = $message;
 
-/* 			# Set variables for "current" navigation styles
-			$this->template->nav = "";
-			$this->template->subnav = "";	
- */
 			# Render the view
 			echo $this->template;
-			
+		
 		}
 		
 		# If user is already logged in, redirect to /posts/stream (landing page)
@@ -43,8 +41,5 @@ class index_controller extends base_controller {
 		}
 
 	}
-	
-	
-	
 		
-} // end class
+}

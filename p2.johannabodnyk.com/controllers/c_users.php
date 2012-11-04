@@ -6,19 +6,27 @@ class users_controller extends base_controller {
 		parent::__construct();
 	}
 	
-	#
-	# Main users page should go to profile page
-	#
+/*-------------------------------------------------------------------------------------------------
+
+	/users/index redirects to profile page
+	
+-------------------------------------------------------------------------------------------------*/
 	public function index() {
 		Router::redirect('/users/profile'); 
 	}
 
-	#
-	# Sign-up form
-	#
+	
+/*-------------------------------------------------------------------------------------------------
+
+	Sign-up form
+	
+-------------------------------------------------------------------------------------------------*/
 	public function signup($error = NULL) {
+				
+		# Set up the view 
 		$this->template->content = View::instance('v_users_signup');
-		
+		$this->template->title   = 'Signup';
+
 		# Check whether form is reloading after a failed signup attempt
 		# If so, send an error message to the view
 		if ($error == "error") {
@@ -28,21 +36,23 @@ class users_controller extends base_controller {
 			$message = "";
 		}
 		
-		$this->template->title   = 'Signup';
+		# Send necessary data/variables to the view
 		$this->template->content->message = $message;
 
+		# Render the view
 		echo $this->template;
 	}
 
-	#
-	# Sign-up form processing
-	#
+	
+/*-------------------------------------------------------------------------------------------------
+
+	Sign-up form processing
+	
+-------------------------------------------------------------------------------------------------*/	
 	public function p_signup () {
 		
-		echo Debug::dump($_POST,"Contents of POST");
-		 
 		# Check to see whether all fields in sign-up form were filled in
-		# (Ran out of time to do sophisticated error-checking here - sorry!)
+		# (Ran out of time to do sophisticated error-checking here!)
 		$missing_data = FALSE;
 		 
 		foreach ($_POST as $field) {
@@ -71,7 +81,7 @@ class users_controller extends base_controller {
 			$_POST['thumb_image'] = "placeholder_thumb.png";
 			$_POST['alt_text'] = "Placeholder profile image";
 
-			# Create initial token and add to POST array
+			# Create token and add to POST array
 			$token = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string());
 			$_POST['token'] = $token;
 			
@@ -81,14 +91,17 @@ class users_controller extends base_controller {
 			# Set cookie so new user is logged in
 			setcookie("token", $token, strtotime('+2 weeks'), '/');
 			
-			# Redirect to edit profile page with variable (new_user) to trigger welcome message
+			# Redirect to edit profile page with variable to trigger welcome message
 			Router::redirect("/users/edit_profile/new_user");
 		}
 	}
 	
-	#
-	# Log-in processing
-	#
+	
+/*-------------------------------------------------------------------------------------------------
+
+	Log-in form processing (from form on logged out homepage)
+	
+-------------------------------------------------------------------------------------------------*/	
 	public function p_login () {
 
 		# Sanitize data entered in login form
@@ -97,7 +110,7 @@ class users_controller extends base_controller {
 		# Hash password and add salt
 		$_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
 		
-		# Get token from DB for submitted email/password combination
+		# Try to get token from DB for submitted email/password combination
 		$q = "SELECT token
 			FROM users
 			WHERE email = '".$_POST['email']."'
@@ -113,14 +126,17 @@ class users_controller extends base_controller {
 		# Otherwise, set cookie using token and redirect to landing page
 		else {
 			setcookie("token", $token, strtotime('+2 weeks'), '/');
-			Router::redirect("/posts");
+			Router::redirect("/posts/stream");
 		}
 	
 	}
 	
-	#
-	# Log out
-	#
+	
+/*-------------------------------------------------------------------------------------------------
+
+	Log out
+	
+-------------------------------------------------------------------------------------------------*/		
 	public function logout() {
 		
 		# Create a new token and array with field name and value of new token
@@ -133,20 +149,25 @@ class users_controller extends base_controller {
 		# Unset cookie to log user out
 		setcookie("token", "", strtotime('-1 year'), '/');
 
+		# Return to homepage
 		Router::redirect("/");
 	}
 
-	#
-	# Profile page -- current user's and other users'
-	#	
+	
+/*-------------------------------------------------------------------------------------------------
+
+	Profile page -- for current user and other users
+	
+-------------------------------------------------------------------------------------------------*/	
 	public function profile($profile_user_id = NULL) {
 		
-		# Authenticate
+		# Authenticate, return to homepage if failed
 		if(!$this->user) {
 			Router::redirect('/');
 			return false;
 		}
 		
+		# Set up the view 
 		$this->template->content = View::instance('v_users_profile');
 		
 		# If no user ID is passed, or a non-numeric ID is passed,
@@ -156,51 +177,42 @@ class users_controller extends base_controller {
 			$profile_user_id = $this->user->user_id;
 		}
 		
-		# Get the profile content from the DB for the user whose profile will be dislayed	
-		# based on $profile_user_id
-		$q = "SELECT 
-			user_id,
-			first_name, 
-			last_name,
-			profile_image,
-			alt_text,
-			email,
-			location,
-			website,
-			bio
+		# Get the profile content from the DB based on $profile_user_id
+		$q = "SELECT *
 			FROM users
-			WHERE user_id = ".$profile_user_id."
-			";
+			WHERE user_id = ".$profile_user_id;
 
 		$profile_content = DB::instance(DB_NAME)->select_row($q);	
 		
 		$following = FALSE;
 		
-		# If we're visiting the current user's own profile
-		# set title and $own_profile for view logic
+		# If displaying the current user's own profile set title and 
+		# subnav accordingly and $own_profile for view logic
 		if ($profile_user_id == $this->user->user_id) {
 			$own_profile = TRUE;
 			$this->template->title   = 'Your profile';
 			$subnav = "profile";
 		}
 
-		# If not, set title and set $following based on whether
-		# the current user is following the user whose profile will be displayed
+		# If displaying another user's profile, set title and subnav 
+		# and set $following to TRUE or FALSE depending on whether
+		# the current user is following that user
 		else {
 			$own_profile = FALSE;
 			
 			$this->template->title = $profile_content['first_name']."'s profile";
 			
 			$q = "SELECT * 
-			FROM users_users
-			WHERE user_id_followed = ".$profile_user_id."
-			and user_id= ".$this->user->user_id;
+				FROM users_users
+				WHERE user_id_followed = ".$profile_user_id."
+				and user_id= ".$this->user->user_id;
 			
 			$following = DB::instance(DB_NAME)->select_row($q);
 			
 			$subnav = "";
 		}
 		
+		# Send necessary data/variables to the view
 		$this->template->content->own_profile = $own_profile;
 		$this->template->content->profile_content = $profile_content;
 		$this->template->content->following = $following;
@@ -209,19 +221,27 @@ class users_controller extends base_controller {
 		$this->template->nav = "chirpers";
 		$this->template->subnav = $subnav;
 		
+		# Render the view
 		echo $this->template;	
 		
 	}
 	
-	#
-	# Edit profile form
-	#
+/*-------------------------------------------------------------------------------------------------
+
+	Edit profile form
+	
+-------------------------------------------------------------------------------------------------*/	
 	public function edit_profile($status = NULL) {
 
+		# Authenticate, return to homepage if failed
 		if(!$this->user) {
 			Router::redirect('/');
 			return false;
 		}
+
+		# Set up the view 
+		$this->template->content = View::instance('v_users_edit_profile');
+		$this->template->title   = 'Edit your profile';
 		
 		# Check for variable indicating a redirect from the sign-up form,
 		# and if so set $message to show a welcome messages
@@ -232,55 +252,63 @@ class users_controller extends base_controller {
 			$message = "";
 		}
 						
-		$this->template->content = View::instance('v_users_edit_profile');
-		$this->template->title   = 'Edit your profile';
+		# Send necessary data/variables to the view
 		$this->template->content->message = $message;
 		
 		# Set variables for "current" navigation styles
 		$this->template->nav = "chirpers";
 		$this->template->subnav = "profile";
-		
+
+		# Render the view
 		echo $this->template;
 	}
 
-	#
-	# Edit profile form processing
-	#	
+	
+/*-------------------------------------------------------------------------------------------------
+
+	Edit profile form processing
+	
+-------------------------------------------------------------------------------------------------*/		
 	public function p_edit_profile() {
 
 		# If "Delete photo" box was checked and no new image was submitted
-		# add placeholder image file names to $_POST array to overwrite existing image
+		# add placeholder images to $_POST array to overwrite existing image
 		if ((array_key_exists('delete_photo', $_POST)) && ($_FILES['profile_image']['name'] == "")) {
 			$_POST['profile_image'] = "placeholder.png";
 			$_POST['thumb_image'] = "placeholder_thumb.png";
 			$_POST['alt_text'] = "Placeholder profile image";
 		}
-		# If an image was submitted, upload to /uploads/ as 
-		# profile_image_[USERID]_original
-		# and add the filename to the $_POST array
+		
+		# If an image was submitted, upload to server,
+		# resize and save profile (250x250) and thumb (75x75) versions,
+		# and add the filenames to the $_POST array
 		if ($_FILES['profile_image']['name'] != "") {
 		
+			# Upload submitted image to server
 			$profile_image = Upload::upload($_FILES, "/uploads/", array("jpg", "jpeg", "gif", "png", "JPG", "JPEG", "GIF", "PNG"), "profile_image_".$this->user->user_id);
 			
+			# Instantiate new image object using uploaded file
 			$imgObj = new Image(APP_PATH."uploads/".$profile_image);
 			
+			# Resize and save profile version of image
  			$imgObj->resize(250,250,"crop");
 			$imgObj->save_image(APP_PATH."uploads/".$profile_image, 100);
 			
+			# Resize and save thumbnail version of image
 			$file_parts = pathinfo($profile_image);
 			$thumb_image = "thumb_image_".$this->user->user_id.".".$file_parts['extension'];
-
 			$imgObj->resize(75,75,"crop");
 			$imgObj->save_image(APP_PATH."uploads/".$thumb_image, 100);
 
+			# Add image filenames and alt text to POST array
 			$_POST['profile_image'] = $profile_image;
 			$_POST['thumb_image'] = $thumb_image;
 			$_POST['alt_text'] = "Profile image for ".$this->user->first_name;
 
 		}
 		
-		# If "Delete photo" is unchecked and no new image was submitted,
-		# do nothing -- profile_image field in DB remains as-is
+		# (If "Delete photo" is unchecked and no new image was submitted,
+		# do nothing -- image fields in DB remains as-is)
 
 		# Remove "Delete photo" checkbox from $_POST array if it exists
 		if (array_key_exists('delete_photo', $_POST)) {
@@ -289,7 +317,6 @@ class users_controller extends base_controller {
 		
 		# Check to see if a password was submitted. If so, add salt and hash.
 		if ($_POST['password'] != "") {
-		
 			$_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
 		}
 		
@@ -299,8 +326,8 @@ class users_controller extends base_controller {
 		}
 
 		# First name, last name, and email are required.
-		# If those elements in the array are blank, remove them from the POST array
-		# so that existing values are not overwritten
+		# If those array elements are blank, remove from POST array
+		# so existing values are not overwritten
 		# (Ran out of time to do sophisticated error-checking on required fields - sorry!)
 		if ($_POST['first_name'] == "") {
 			unset($_POST['first_name']);
@@ -312,42 +339,47 @@ class users_controller extends base_controller {
 			unset($_POST['email']);
 		}
 		
-
-		
 		# Update DB with new profile information (including empty fields)
 		DB::instance(DB_NAME)->update("users", $_POST, "WHERE token = '".$this->user->token."'");		
 	
  		Router::redirect('/users/profile'); 
 
 	}
+
+/*-------------------------------------------------------------------------------------------------
+
+	Delete account confirmation page (from button Edit Profile form)
 	
-	#
-	# Delete account confirmation page
-	#	
+-------------------------------------------------------------------------------------------------*/		
 	public function delete () {
 		
+		# Authenticate, return to homepage if failed
 		if(!$this->user) {
 			Router::redirect('/');
 			return false;
 		}
 		
-		# Set variables for "current" navigation styles
-		$this->template->nav = "chirpers";
-		$this->template->subnav = "profile";
-		
 		# Set up the view
 		$this->template->content = View::instance("v_users_delete");
 		$this->template->title = "Delete account";
 		
+		# Set variables for "current" navigation styles
+		$this->template->nav = "chirpers";
+		$this->template->subnav = "profile";
+		
 		# Render the view
 		echo $this->template;
 	}
+
+
+/*-------------------------------------------------------------------------------------------------
+
+	Delete account processing
 	
-	#
-	# Delete account processing
-	#		
+-------------------------------------------------------------------------------------------------*/		
 	public function p_delete () {
 		
+		# Authenticate, return to homepage if failed
 		if(!$this->user) {
 			Router::redirect('/');
 			return false;
@@ -366,7 +398,7 @@ class users_controller extends base_controller {
 			
 		DB::instance(DB_NAME)->delete("posts", $where_condition);
 
-		# Remove current user from the user table
+		# Remove current user from the users table
 		$where_condition = "WHERE
 			user_id = ".$this->user->user_id;
 			
@@ -375,6 +407,7 @@ class users_controller extends base_controller {
 		# Unset cookie
 		setcookie("token", "", strtotime('-1 year'), '/');
 		
+		# Return to homepage
 		Router::redirect('/'); 
 	}	
 }

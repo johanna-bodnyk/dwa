@@ -45,4 +45,4 @@ A email designated to receive messages from the server. Examples:
 
 # For extra security, you might want to set different salts than what the core uses
 	define('PASSWORD_SALT', 'penguin');
-	//define('TOKEN_SALT', '');
+	define('TOKEN_SALT', 'petunia');
