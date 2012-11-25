@@ -1,24 +1,23 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<title>CSCI E-75 &ndash; Project 3 Proposal &ndash; Johanna Bodnyk</title>
-		<link rel="stylesheet" type="text/css" href="style.css" media="all">
-		<link href="http://fonts.googleapis.com/css?family=Headland+One" rel="stylesheet" type="text/css">
-		<meta name="description" content="Project 1 for Fall 2012 Harvard Extension School course CSCI E-75 &ndash; Dynamic Web Applications, by Johanna Bodnyk.">
-	</head>
-	<body>
-		<h1>Project 3 Proposal &ndash; Johanna Bodnyk</h1>
-		<h2>Cooking Calculator</h2>
-		<p>My project will be to build a cooking calculator that converts various units of cooking measurement from one unit to another. It will allow you to enter any unit and see all the other units that unit can reasonably be converted to. For instance, you could enter a number of tablespoons and see how many teaspoons, ounces, and cups that equals. It should allow you to enter fractions as either decimals or standard "x/x" fractions, and should display results as fractions (since that's what's used in recipes). Time allowing, I would also like to add functionality to scale up a measurement (eg. "1.5 teaspoons x 3"), and to highlight the "best" unit to use (eg. "1 cup + 2 tablespoons" instead of "18 tablespoons").</p>
-		<h2>Sketches</h2>
-		<p><img src="sketch1.png" alt="sketch 1"></p>
-		<p><img src="sketch2.png" alt="sketch 2"></p>
-		<p><img src="sketch3.png" alt="sketch 3"></p>
-		<h2>Examples</h2>
-		<ul>
-			<li>Unit conversions embedded in Google search results. <a href="https://www.google.com/search?q=ounces+to+cups&aq=0&oq=ounces+to+cups&sugexp=chrome,mod=0&sourceid=chrome&ie=UTF-8#hl=en&sugexp=les%3B&gs_nf=3&tok=1AQGSgJ_NENepC1wmK7adA&pq=tablespoons%20to%20cups&cp=9&gs_id=z&xhr=t&q=cups+to+tablespoons&pf=p&sclient=psy-ab&oq=cups+to+t&gs_l=&pbx=1&bav=on.2,or.r_gc.r_pw.r_cp.r_qf.&fp=fb3f20bcb15e4a5&bpcl=37189454&biw=911&bih=567">For example, searching "cups to tablespoons" returns this.</a> I like the large, clean interface, and the dropdown to change between kinds of measurement (in the case of cooking, volume and weight would be relevant). </li> 
-			<li><a href="http://egret.net/kb__mb.htm">This byte/kilobyte/megabyte/etc. conversion tool.</a> I like the fact that you can see one value converted into multiple units at once.</li> 
-			<li><a href="http://www.convert-me.com/en/convert/cooking/">This example</a> is neat in that it converts weight to volume (or vice versa) based on the food substance you choose. Might try to incorporate that depending on how complex the rest of the project turns out to be.</a></li>
-		</ul>
-	</body>
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="js/cookingcalc.js"></script>
+</head>
+<body>
+	<h1>Cooking Calculator</h1>
+	<form>
+		<label for="amount">Enter amount: </label>
+		<input type="text" name="amount" id="amount">
+		<br><br>	
+		<label for="unit">Enter unit: </label>
+		<input type="text" name="unit" id="unit">
+		<br><br>
+		<label for="scale">x </label>
+		<input type="text" name="scale" id="scale">
+		<br><br>
+	</form>
+	<div id="conversions">
+	</div>
+</body>
 </html>
