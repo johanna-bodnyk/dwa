@@ -256,53 +256,81 @@ function findBestAnswer(amt_in_tsps) {
 
 $(document).ready(function() {
 	
+	var scale;
+	var scale_fraction = new Fraction(1);
 	var amt_entered;
+	var amt_fraction;
 	var unit_entered;
-	var scale = "1";
 	
 	$('input[name=amount]').keyup(function() {
 		amt_entered = $(this).val();
+		//Create Fraction object using amount entered
+		if (amt_entered.indexOf('/')!=-1) {
+			amt_fraction = fractionFromString(amt_entered);
+		}
+		else {
+			amt_fraction = new Fraction(Number(amt_entered));
+		}
+		
+		console.log("Amount entered as fraction is "+amt_fraction.numerator+" / "+amt_fraction.denominator);
+		
+		if (amt_fraction.numerator != amt_fraction.numerator  || amt_fraction.numerator <= 0) {
+			$('#amount-error').show();
+			amt_entered = "";
+			$('#best-answer').html("");
+			$('#conversions').html("");
+		}
+		else {
+			$('#amount-error').hide();
+			displayResults();
+		}
 	});
 	
 	$('input[name=unit]').keyup(function() {
 		unit_entered = $(this).val();
-		displayResults();
+		//Standardize unit name
+		unit_entered = standardizeUnitName(unit_entered);	
+		//Check whether a valid unit was entered
+		if (unit_entered == "") {
+			$('#unit-error').show();
+			$('#best-answer').html("");
+			$('#conversions').html("");
+		}
+		else {
+			displayResults();
+			$('#unit-error').hide();
+		}
 	});
 	
 	$('input[name=scale]').keyup(function() {
 		scale = $(this).val();
+		//Create Fraction object using scale entered (or reset to 1 if scale was deleted)
+		if (scale == "") {
+			scale_fraction = new Fraction(1);
+		}
+		else if (scale.indexOf('/')!=-1) {
+			scale_fraction = fractionFromString(scale);
+		}
+		else {
+			scale_fraction = new Fraction(Number(scale));
+		}
+		//If scale fraction does not validate, show error and reset to scale to 1
+		if (scale_fraction.numerator != scale_fraction.numerator || scale_fraction.numerator <= 0) {
+			$('#scale-error').show();
+			scale_fraction = new Fraction(1);
+		}
+		else {
+			$('#scale-error').hide();
+		}
 		displayResults();
 	});
 	
 	function displayResults() {
 		if (amt_entered && unit_entered) {
 			
-			//If scale was added and then deleted, reset to 1
-			if (scale == "") {
-				scale = "1";
-			}
-			
 			console.log("Amount entered is "+amt_entered);
 			console.log("Unit entered is "+unit_entered);
-			console.log("Scale is "+scale);
-	
-			unit_entered = standardizeUnitName(unit_entered);	
-			
-			//Create Fraction object using amount entered
-			if (amt_entered.indexOf('/')!=-1) {
-				var amt_fraction = fractionFromString(amt_entered);
-			}
-			else {
-				var amt_fraction = new Fraction(Number(amt_entered));
-			}
-					
-			//Create Fraction object using scale entered
-			if (scale.indexOf('/')!=-1) {
-				var scale_fraction = fractionFromString(scale);
-			}
-			else {
-				var scale_fraction = new Fraction(Number(scale));
-			}						
+			console.log("Scale is "+scale);			
 			
 			//Multiply amount entered by scale entered (as fractions) to get scaled amount entered
 			var scaled_amt_fraction = amt_fraction.multiply(scale_fraction);
@@ -313,12 +341,12 @@ $(document).ready(function() {
 			//Multiply scaled amount entered by conversion amount (as fractions) to get amount entered in teaspoons
 			var amt_in_tsps = scaled_amt_fraction.multiply(conversion_fraction);
 			
-			//For testing
-			$('#testing').html('Amount in teaspoons as a fraction: ' +amt_in_tsps.numerator+' / '+amt_in_tsps.denominator);
+			// For testing - DELETE
+			// $('#testing').html('Amount in teaspoons as a fraction: ' +amt_in_tsps.numerator+' / '+amt_in_tsps.denominator);
 			
-			if (amt_in_tsps >= 1) {
-			$('#testing').append('<br>Amount in teaspoons is greater than or equal to 1.');
-			}
+			// if (amt_in_tsps >= 1) {
+			// $('#testing').append('<br>Amount in teaspoons is greater than or equal to 1.');
+			// }
 			
 			// console.log(amt_in_tsps % 12);
 			
@@ -327,7 +355,6 @@ $(document).ready(function() {
 			
 			//Call function to convert amount entered to each unit and display results in #conversions div
 			$('#conversions').html(convert(amt_in_tsps));
-			
 		}
 	};
 
