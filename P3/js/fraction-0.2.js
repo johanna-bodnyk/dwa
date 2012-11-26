@@ -207,7 +207,7 @@ Fraction.prototype.divide = function(b)
     var a = this.clone();
     if (b instanceof Fraction)
     {
-	// ******Changed to cross-multiplication to avoid issues with repeating decimals!!!
+	// Johanna Bodnyk: Changed to cross-multiplication to avoid issues with repeating decimals
         // a.numerator /= b.numerator;
         // a.denominator /= b.denominator;
 		a.numerator *= b.denominator;
