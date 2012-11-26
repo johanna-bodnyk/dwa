@@ -2,21 +2,26 @@
 <head>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="js/cookingcalc.js"></script>
+	<script type="text/javascript" src="js/fraction-0.2.js"></script>
+	<script type="text/javascript" src="js/cookingcalc-2.js"></script>
 </head>
 <body>
 	<h1>Cooking Calculator</h1>
 	<form>
 		<label for="amount">Enter amount: </label>
-		<input type="text" name="amount" id="amount">
+		<input type="text" name="amount" id="amount"><span id="amount-error">Error! Please enter a valid amount (as a decimal or a fraction, eg. "1.5" or "1 1/2").</span>
 		<br><br>	
 		<label for="unit">Enter unit: </label>
-		<input type="text" name="unit" id="unit">
+		<input type="text" name="unit" id="unit"><span id="unit-error">Error! Please enter a valid unit (such as tablespoon, teaspoon, cup, etc.) Common abbreviations (c, t, T, qt.) also recognized.</span>
 		<br><br>
 		<label for="scale">x </label>
-		<input type="text" name="scale" id="scale">
+		<input type="text" name="scale" id="scale"><span id="scale-error">Error! Please enter a valid amount (as a decimal or a fraction, eg. "1.5" or "1 1/2").</span>
 		<br><br>
 	</form>
+	<div id="testing">
+	</div>	
+	<div id="best-answer">
+	</div>
 	<div id="conversions">
 	</div>
 </body>
