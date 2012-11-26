@@ -7,23 +7,41 @@
 	<script type="text/javascript" src="js/cookingcalc.js"></script>
 </head>
 <body>
-	<h1>Cooking Calculator</h1>
-	<form>
-		<label for="amount">Enter amount: </label>
-		<input type="text" name="amount" id="amount"><span id="amount-error">Error! Please enter a valid amount (as a decimal or a fraction, eg. "1.5" or "1 1/2").</span>
-		<br><br>	
-		<label for="unit">Enter unit: </label>
-		<input type="text" name="unit" id="unit"><span id="unit-error">Error! Please enter a valid unit (such as tablespoon, teaspoon, cup, etc.) Common abbreviations (c, t, T, qt.) also recognized.</span>
-		<br><br>
-		<label for="scale">x </label>
-		<input type="text" name="scale" id="scale"><span id="scale-error">Error! Please enter a valid amount (as a decimal or a fraction, eg. "1.5" or "1 1/2").</span>
-		<br><br>
-	</form>
-	<div id="testing">
-	</div>	
-	<div id="best-answer">
+	<div id="main">
+		<h1>Cooking Calculator</h1>
+		
+		<!-- Fields for user input -->
+		<form>
+			<div id="amount-div">
+				<label for="amount">Amount</label><br>
+				<input type="text" name="amount" id="amount"><br>
+				<!-- Error message -->
+				<span class="error">Enter a whole number, decimal, or fraction (eg. 3, 1.5, or 1 1/2).</span>
+			</div>
+			<div id="unit-div">
+				<label for="unit">Unit</label><br>
+				<input type="text" name="unit" id="unit">		<span id="x">x</span><br>
+				<!-- Error message -->
+				<span class="error">Enter a standard US unit of volume used in cooking. Abbreviations (eg. t, T, tsp, qt.) also accepted.</span>
+			</div>
+			<div id="scale-div">
+				<label for="scale">Scale</label><br>
+				<input type="text" name="scale" id="scale"><br>
+				<!-- Error message -->
+				<span class="error">Enter a whole number, decimal, or fraction (eg. 3, 1.5, or 1 1/2).</span>
+			</div>
+
+		</form>
+			<div class="clear">&nbsp;</div>
+		
+		<!-- Divs to display results -->
+		<div id="results">
+			<h2>Best answer (using common measuring sizes):</h2>
+			<div id="best-answer"></div>
+			<h2>All conversions:</h2>
+			<div id="conversions"></div>
+		</div>
 	</div>
-	<div id="conversions">
-	</div>
+	<p>Copyright 2012 Johanna Bodnyk</p>
 </body>
 </html>

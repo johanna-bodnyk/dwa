@@ -24,13 +24,12 @@ $(document).ready(function() {
 		
 		//Check whether a valid amount was entered. If not, display error, reset amount variable, and clear results.
 		if (amt_fraction.numerator != amt_fraction.numerator  || amt_fraction.numerator <= 0) {
-			$('#amount-error').show();
+			$('#amount-div .error').css('display','block');
 			amt_entered = "";
-			$('#best-answer').html("");
-			$('#conversions').html("");
+			$('#results').hide();
 		}
 		else {
-			$('#amount-error').hide();
+			$('#amount-div .error').hide();
 			displayResults();
 		}
 	});
@@ -44,13 +43,12 @@ $(document).ready(function() {
 		
 		//Check whether a valid unit was entered. If not, display error and clear results
 		if (unit_entered == "") {
-			$('#unit-error').show();
-			$('#best-answer').html("");
-			$('#conversions').html("");
+			$('#unit-div .error').css('display','block');
+			$('#results').hide();
 		}
 		else {
 			displayResults();
-			$('#unit-error').hide();
+			$('#unit-div .error').hide();
 		}
 	});
 	
@@ -69,11 +67,11 @@ $(document).ready(function() {
 		}
 		//If scale fraction does not validate, display error and reset to scale to 1
 		if (scale_fraction.numerator != scale_fraction.numerator || scale_fraction.numerator <= 0) {
-			$('#scale-error').show();
+			$('#scale-div .error').css('display','block');
 			scale_fraction = new Fraction(1);
 		}
 		else {
-			$('#scale-error').hide();
+			$('#scale-div .error').hide();
 		}
 		displayResults();
 	});
@@ -91,10 +89,12 @@ $(document).ready(function() {
 			var amt_in_tsps = scaled_amt_fraction.multiply(conversion_fraction);
 			
 			//Call function to find best combination of common cooking measurements for scaled amount entered and display results in #best-answer div 	
-			$('#best-answer').html("<p>Best answer: "+findBestAnswer(amt_in_tsps)+"</p>");
+			$('#best-answer').html("<p>"+findBestAnswer(amt_in_tsps)+"</p>");
 			
 			//Call function to convert amount entered to common units and display results in #conversions div
 			$('#conversions').html(convert(amt_in_tsps));
+			
+			$('#results').show();
 		}
 	};
 
@@ -206,11 +206,10 @@ function convert(amt_in_tsps) {
 	return conversion_list;
 };
 	
-/*----------------------------------
-	Find best combination of common
-	cooking measurements to add up 
-	to amount entered
------------------------------------*/
+/*-------------------------------------------------
+	Find best combination of common cooking 
+	measurements to add up to amount entered
+---------------------------------------------------*/
 
 function findBestAnswer(amt_in_tsps) {
 	
