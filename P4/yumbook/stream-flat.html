@@ -3,7 +3,7 @@
 
 		<title>CSCI E-75 &ndash; Project 4 &ndash; Johanna Bodnyk</title>
 		<link rel="stylesheet" type="text/css" href="style.css" media="all">
-		<link href='http://fonts.googleapis.com/css?family=Permanent+Marker' rel='stylesheet' type='text/css'>
+		<link href="http://fonts.googleapis.com/css?family=Headland+One" rel="stylesheet" type="text/css">
 		<meta name="description" content="Project 1 for Fall 2012 Harvard Extension School course CSCI E-75 &ndash; Dynamic Web Applications, by Johanna Bodnyk.">
 
 </head>
@@ -38,169 +38,80 @@
 		<ul id="yumstream">
 			
 			<!-- Main dish -->
-			<li class="meal">
+			<li class="main-dish"><ul>
+				<li class="image">
+					<img class="main" src="http://placekitten.com/400/400">
+				</li>
+				<li class="dish"><h3>Herb-Crusted Roast Beef</h3></li>
+				<li class="user">Johanna Bodnyk</li>
+				<li class="note">A festively enormous hunk of meat for Christmas dinner.</li>
+				<li class="date">12/25/2011 &ndash; 4:00pm</li>
 				
-				<div class="images">
-					<img class="cover" src="images/roast-beef-402.jpg">
-					<img class="thumb" src="images/roast-beef-2-93.jpg">
-					<img class="thumb" src="images/roast-beef-3-93.jpg">
-					<img class="thumb" src="images/roast-beef-4-93.jpg">
-					<img class="thumb last" src="images/roast-beef-5-93.jpg">
-				</div>
-				
-				<div class="info">
-					<h3 class="dish-title">Herb-Crusted Roast Beef</h3>
-					<p class="note">"A festively enormous hunk of meat for Christmas dinner."</p>
-					<p class="user">Johanna Bodnyk <span class="date">| 12/25/2011, 4:00pm</span></p>
-										
-					<!-- Main dish buttons -->
-					<div class="buttons">
-						<p class="likes">
-							<a class="button" href="#">Like</a>
-							<span class="count">Likes: 2</span>
-						</p>
-						<p class="wants">
-							<a class="button" href="#">Want to Cook</a>
-							<span class="count">Wants: 4</span>
-						</p>
-						<p class="comment-controls">
-							<a class="button" href="#">Hide comments</a>
-							<span class="count">Comments: 3</span>
-						</p>
-					</div>	
-					
-					<!-- Main dish comments -->
-					<div class="comments">
-						<ul>
-							<li class="comment">
-								<img class="avatar" src="http://placekitten.com/40/40">
-								<span class="comment-user">Matthew Christian</span> said:
-								<span class="comment-text">This looks so good!</span>
-								<span class="comment-date"><br>12/26/2011 &ndash; 11:49pm</span>
-							</li>							
-							<li class="comment">
-								<img class="avatar" src="http://placekitten.com/40/40">
-								<span class="comment-user">Matthew Christian</span> said:
-								<span class="comment-text">Will you make this for me?</span>
-								<span class="comment-date"><br>12/26/2011 &ndash; 11:49pm</span>
-							</li>
-							<li class="comment">
-								<img class="avatar" src="http://placekitten.com/40/40">
-								<span class="comment-user">Kate Johannes</span>
-								<span class="comment-text">Wish I'd been there. I might call your mom for that roast beef recipe!</span>
-								<span class="comment-date"><br>12/27/2011 &ndash; 6:00pm</span>
-							</li>
-						</ul>
-						<a class="add-comment button" href="#">Add comment</a>
-					</div> 
-				</div>
-				
-				<div class="clear"></div>
+				<!-- Main dish buttons -->
+				<li class="buttons"> BUTTONS
+					<span class="like count">2 people like this</span>
+					<a class="like button" href="#">Like</a>
+					<span class="want count">4 people want to cook this</span>
+					<a class="want button" href="#">Want to Cook</a>
+					<span class="comment count">2 comments</span>
+					<a class="comment button" href="#">View comments</a>
+				</li>	
+				<!-- Main dish comments -->
+				<li class="comments"> COMMENTS <ul>
+					<li class="comment">
+						<img class="avatar" src="http://placekitten.com/40/40">
+						<span class="comment-user">Matthew Christian said:</span>
+						<span class="comment-text">This looks so good!</span>
+						<span class="comment-date"><br>12/26/2011 &ndash; 11:49pm</span>
+					</li>
+					<li class="comment">
+						<img class="avatar" src="http://placekitten.com/40/40">
+						<span class="comment-user">Kate Johannes said:</span>
+						<span class="comment-text">Wish I'd been there. I might call your mom for that roast beef recipe!</span>
+						<span class="comment-date"><br>12/27/2011 &ndash; 6:00pm</span>
+					</li>
+					<li class="add-comment">
+						<a class="button" href="#">Add comment</a>
+					</li>
+				</ul></li>						
 				
 				<!-- Other dishes -->
-				<ul class="other-dishes">
+				<li class="other-dishes"> OTHER DISHES
 				
 					<!-- Other dish -->
-					<li>
-						<img class="other" src="http://placekitten.com/194/125">
-						<h4>Chocolate Tart with Candied Cranberries</h4>
-						<div class="other-info">
-							<p class="note">"Shiny and red like Christmas :)"</p>
-							<a class="button" href="#">Expand</a>	
-						</div>
-					</li>	
+					<ul> OTHER DISH
+						<li class="image">
+							<img class="other" src="http://placekitten.com/200/125">
+						</li>
+						<li class="dish"><h4>Mashed Potatoes</h4></li>
+						<li class="note">Like you do</li>
+						<li><a class="expand-button" href="#">Expand</a></li>		
+					</ul>
 					
 					<!-- Other dish -->
-					<li class="right">
-						<img class="other" src="http://placekitten.com/194/125">
-						<div class="other-info">
-							<h4>Mashed Potatoes</h4>
-							<p class="note">"Like you do"</p>
-							<a class="button" href="#">Expand</a>
-						</div>
-					</li>
-					<li class="clear"></li>
+					<ul> OTHER DISH
+						<li class="image">
+							<img class="other" src="http://placekitten.com/200/125">
+						</li>
+						<li class="dish"><h4>Green Beans</h4></li>
+						<li><a class="expand-button" href="#">Expand</a></li>		
+					</ul>
+					
 					<!-- Other dish -->
-					<li>
-						<img class="other" src="http://placekitten.com/194/125">
-						<div class="other-info">
-							<h4>Green Beans</h4>
-							<a class="button" href="#">Expand</a>
-						</div>
-					</li>
-					
-					
+					<ul> OTHER DISH
+						<li class="image">
+							<img class="other" src="http://placekitten.com/200/125">
+						</li>
+						<li class="dish"><h4>Chocolate Tart with Candied Cranberries</h4></li>
+						<li class="note">Shiny and red like Christmas :)</li>
+						<li><a class="expand-button" href="#">Expand</a></li>		
+					</ul>
 				
-					<li class="right">
-						<img class="other" src="http://placekitten.com/194/125">
-						<div class="other-info">
-							<h4>Green Beans</h4>
-							<a class="button" href="#">Expand</a>
-						</div>
-					</li>
-					<li class="clear"></li>
+				</li>			
+			</ul></li>
 
-				</ul>			
-			</li>
-
-			<li class="meal">
-				
-				<div class="images">
-					<img class="cover" src="images/roast-beef-402.jpg">
-				</div>
-				
-				<div class="info">
-					<h3 class="dish-title">Herb-Crusted Roast Beef</h3>
-					<p class="user">Johanna Bodnyk <span class="date">| 12/25/2011, 4:00pm</span></p>
-										
-					<!-- Main dish buttons -->
-					<div class="buttons">
-						<p class="likes">
-							<a class="button" href="#">Like</a>
-							<span class="count">Likes: 2</span>
-						</p>
-						<p class="wants">
-							<a class="button" href="#">Want to Cook</a>
-							<span class="count">Wants: 4</span>
-						</p>
-						<p class="comment-controls">
-							<a class="button" href="#">View comments</a>
-							<span class="count">Comments: 3</span>
-						</p>
-					</div>	
-					
-					<!-- Main dish comments -->
-					<!-- <div class="comments">
-						<ul>
-							<li class="comment">
-								<img class="avatar" src="http://placekitten.com/40/40">
-								<span class="comment-user">Matthew Christian</span> said:
-								<span class="comment-text">This looks so good!</span>
-								<span class="comment-date"><br>12/26/2011 &ndash; 11:49pm</span>
-							</li>							
-							<li class="comment">
-								<img class="avatar" src="http://placekitten.com/40/40">
-								<span class="comment-user">Matthew Christian</span> said:
-								<span class="comment-text">Will you make this for me?</span>
-								<span class="comment-date"><br>12/26/2011 &ndash; 11:49pm</span>
-							</li>
-							<li class="comment">
-								<img class="avatar" src="http://placekitten.com/40/40">
-								<span class="comment-user">Kate Johannes</span>
-								<span class="comment-text">Wish I'd been there. I might call your mom for that roast beef recipe!</span>
-								<span class="comment-date"><br>12/27/2011 &ndash; 6:00pm</span>
-							</li>
-						</ul>
-						<a class="add-comment button" href="#">Add comment</a>
-					</div> -->
-				</div>
-				
-				<div class="clear"></div>
-							
-			</li>
 
 		</ul>
-		<div class="clear"></div>
 
 		</div>
 
