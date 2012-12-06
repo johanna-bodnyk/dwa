@@ -6,7 +6,7 @@
 body {
 	width: 884px;
 	margin: auto;
-	font-family: "Trebuchet MS", sans-serif;
+	font-family: 'Trebuchet MS', sans-serif;
 	font-size: 16px;
 	background-color: #3B8686;
 }
@@ -16,28 +16,36 @@ body {
 	padding: 30px;
 }
 
-#header {
-	border-bottom: #bbb 1px solid;
-}
-
-h1 {
-	font-size: 86px;
-	margin: 0;
-}
-
-h2 {
-	font-size: 44px;
+ul {
+	list-style-type: none;
+	padding: 0;
 	margin: 10px 0;
+}
+
+/*-------------------- 
+	Headings 
+--------------------*/
+
+h1, h2, h3, h4, ul#main-nav{
+	font-family: 'Permanent Marker', cursive;
+	font-weight: normal;
+	line-height: 1.3em;
 }
 
 h1, h2 {
 	color: #3B8686;
 }
 
-h1, h2, h3, h4 {
-	font-family: 'Permanent Marker', cursive;
-	font-weight:normal;
-	line-height: 1.3em;
+h1 {
+	font-size: 86px;
+	margin: 0 20px 0 0;
+	width: 402px;
+	float: left;
+}
+
+h2 {
+	font-size: 44px;
+	margin: 10px 0;
 }
 
 h3 {
@@ -50,11 +58,44 @@ h4 {
 	margin: 0 0 5px 0;
 }
 
-ul {
-	list-style-type: none;
-	padding: 0;
-	margin: 10px 0;
+/*-------------------- 
+	Header and
+	navigation
+--------------------*/
+
+#header {
+	background-color: #eee;
+
 }
+
+ul#main-nav {
+	width: 402px;
+	float: left;
+}
+
+ul#main-nav li a {
+	text-decoration: none;
+	color: black;
+	width: 120px;
+	margin: 0 12px 10px 0;
+	padding-bottom: 6px;
+	float: left;
+	font-size: 24px;
+}
+
+ul#main-nav li a.current {
+	border-bottom: 5px solid #3B8686;
+}
+
+/*-------------------- 
+	Main content
+--------------------*/
+
+#main {
+	clear: both;
+	padding-top:20px;
+/* 	border-top: #bbb 1px solid;
+ */}
 
 li.meal {
 	margin-bottom: 30px;
