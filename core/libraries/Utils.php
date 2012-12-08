@@ -315,10 +315,10 @@ class Utils {
             if(strstr($file,".css")) {
             
             	if(strstr($file,"print_")) {
-            		$contents .= '<link rel="stylesheet" type="text/css" href="'.$file.'" media="print">';
+            		$contents .= '<link rel="stylesheet" type="text/css" href="'.$file.'" media="print"/>';
             	}
             	else {
-	                $contents .= '<link rel="stylesheet" type="text/css" href="'.$file.'">';
+	                $contents .= '<link rel="stylesheet" type="text/css" href="'.$file.'"/>';
 	            }
             }
             else {

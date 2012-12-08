@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<head>
+
+		<title>CSCI E-75 &ndash; Project 4 &ndash; Johanna Bodnyk</title>
+		<link rel="stylesheet" type="text/css" href="style.css" media="all">
+		<link href='http://fonts.googleapis.com/css?family=Permanent+Marker' rel='stylesheet' type='text/css'>
+		<meta name="description" content="Project 1 for Fall 2012 Harvard Extension School course CSCI E-75 &ndash; Dynamic Web Applications, by Johanna Bodnyk.">
+
+</head>
+
+<body>
+
+<div id="wrapper">
+	<div id="header">
+		<h1>Yumbook</h1>
+		
+		<ul id="main-nav">
+			<li><a href="#">Add a meal</a></li>
+			<li><a href="#">Your friends</a></li>
+			<li><a href="#" class="current">Your dishes</a></li>
+			<div class="clear"></div>
+			<li><a href="#">Your meals</a></li>
+			<li><a href="#">Friends' meals</a></li>
+			<li><a href="#">Your account</a></li>
+		</ul>
+		<div class="clear"></div>	
+	</div>
+
+	<div id="main">
+		<h2>Add a dish...</h2>
+				
+		<form name="add-dish" action="#" method="POST" enctype="multipart/form-data">
+			
+			<label for="dish_name">Name of dish or food</label>
+			<input type="text" name="dish_name" id="dish_name" value="">
+			
+			<!-- Image section-->
+			<h3>Photos</h3>
+			
+			<fieldset>
+			<p>ADD PHOTO CONTROLS</p>
+			</fieldset>
+			
+			<fieldset>
+				<h3>Recipe Source</h3>
+				<label for="source_type">Source Type</label>
+				<select name="source_type" id="source_type">
+					<option value="online">Online Recipe</option>
+					<option value="cookbook">Cookbook</option>
+					<option value="restaurant">Restaurant Meal</option>
+					<option value="original">Original Recipe</option>
+				</select>			
+				<label for="source_name">Source Name</label>
+				<input type="text" name="source_name" id="rsource_name" value="">
+				<label for="source_link">Source Link</label>	
+				<span class="instructions">Link to online recipe, restaurant website, or cookbook.</span>
+				<input type="text" name="source_link" id="source_link" value="">
+			</fieldset>
+			<label for="default_meal">Default Meal
+			</label>
+			<select name="default_meal" id="default_meal">
+				<option value="breakfast">Breakfast</option>
+				<option value="lunch">Lunch</option>
+				<option value="dinner">Dinner</option>
+				<option value="snack">Snack</option>
+			</select>	
+
+				
+			<label for="bio">Notes</label>
+			<textarea name="bio" id="bio" rows="10" cols="68"></textarea>	
+			
+			<input type="submit" value="Save Dish" id="submit-button">
+			
+			<p class="form-button"><a class="button"href="/users/profile">Cancel</a>
+			
+			<p class="form-button"><a class="button delete" href="/users/delete">Delete Dish</a>
+			
+		</form>
+		
+
+
+		</div>
+
+	<div id="footer">
+
+	</div>
+
+</div>	
+</body>
