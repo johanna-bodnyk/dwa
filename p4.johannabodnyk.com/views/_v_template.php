@@ -10,8 +10,11 @@
 	<link href='http://fonts.googleapis.com/css?family=Permanent+Marker' rel='stylesheet' type='text/css'>
 	
 	<!-- JS -->
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+	<script src="/js/jquery.form.js"></script>
+	<script src="/js/iframe.form.js"></script>
+	<script src="/js/yumbook.js"></script>
 				
 	<!-- Controller Specific JS/CSS -->
 	<?=@$client_files; ?>
