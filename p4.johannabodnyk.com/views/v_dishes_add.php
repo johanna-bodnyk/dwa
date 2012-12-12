@@ -12,15 +12,11 @@
 			<!-- Image section-->
 			<h3>Photos</h3>
 			
-			<iframe src="/photos/upload">
-			<fieldset>
 			<div id="image-inputs">
-				<input type="file" id="image-input-1">
-				<input type="button" class="image-upload" id="1" value="Upload">
+				<iframe src="/photos/upload/1" class="image-upload-iframe">
+				</iframe>
 			</div>
 			<input type="button" id="add-another-photo" value="Add another photo">
-			</fieldset>
-			</iframe>
 			
 			<fieldset>
 				<h3>Recipe Source</h3>

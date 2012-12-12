@@ -4,7 +4,7 @@ $(document).ready(function() {
 	
 	// Add a new file upload field when 'Add another photo' button is clicked
 	$('#add-another-photo').click(function() {
-		$('#image-inputs').append('<br><input type="file" id="image-input-1"><input type="button" class="image-upload"id="1" value="Upload">');
+		$('#image-inputs').append('<br><iframe src="/photos/upload/foo" class="image-upload-iframe"></iframe>');
 	});
 	
 	$('.image-upload').click(function() {

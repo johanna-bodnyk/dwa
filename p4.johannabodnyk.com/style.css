@@ -449,6 +449,10 @@ input[type="submit"], input[type="button"] {
 	float:left;
 }
 
+input#add-another-photo {
+	float:none;
+}
+
 input[type="submit"]:hover, input[type="button"]:hover {
 	background-color: #bbb;
 }
@@ -474,4 +478,18 @@ p.form-button a.delete {
 
 p.form-button a.delete:hover {
 	background-color: red;
+}
+
+/*-------------------- 
+	Image uploading
+	iframe styles
+--------------------*/
+
+
+body#iframe {
+	background-color: #fff;
+}
+
+iframe.image-upload-iframe {
+
 }
