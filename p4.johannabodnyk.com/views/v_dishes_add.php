@@ -3,8 +3,6 @@
 		<!-- Add dish form -->
 
 		<form name="add-dish" action="/dishes/p_add" method="POST" enctype="multipart/form-data">
-			
-			<?=$message?>
 
 			<label for="name">Name of dish or food</label>
 			<input type="text" name="name" id="name" value="">
@@ -13,15 +11,18 @@
 			<h3>Photos</h3>
 			
 			<div id="image-inputs">
-				<iframe src="/photos/upload/1" class="image-upload-iframe">
-				</iframe>
+				<div id="image-input-1">
+					<iframe src="/photos/upload/1" class="image-upload-iframe" seamless>
+					</iframe>
+				</div>
 			</div>
 			<input type="button" id="add-another-photo" value="Add another photo">
 			
-			<fieldset>
+			<fieldset id="recipe-source">
 				<h3>Recipe Source</h3>
 				<label for="source_type">Source Type</label>
 				<select name="source_type" id="source_type">
+					<option value="none"></option>
 					<option value="online">Online Recipe</option>
 					<option value="cookbook">Cookbook</option>
 					<option value="restaurant">Restaurant Meal</option>

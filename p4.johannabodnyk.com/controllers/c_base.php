@@ -6,6 +6,7 @@ class base_controller {
 	public $userObj;
 	public $template;
 	public $email_template;
+	public $iframe_template;
 
 	/*-------------------------------------------------------------------------------------------------
 	
@@ -20,7 +21,8 @@ class base_controller {
 						
 		# Set up templates
 			$this->template 	  = View::instance('_v_template');
-			$this->email_template = View::instance('_v_email');			
+			$this->email_template = View::instance('_v_email');		
+			$this->iframe_template = View::instance('_v_iframe');			
 								
 		# So we can use $user in views			
 			$this->template->set_global('user', $this->user);

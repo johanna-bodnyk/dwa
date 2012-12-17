@@ -15,26 +15,15 @@ class photos_controller extends base_controller {
 
 	public function upload ($id) {
 
-		echo '<!DOCTYPE html>
-			<html>
-				<head>
-					<link rel="stylesheet" type="text/css" href="/style.css" media="all" />
-				</head>	
-
-				<body id="iframe" seamless>
-						
-						<form name="upload-photo" action="/photos/p_upload" method="POST" enctype="multipart/form-data">
-						
-							<input type="file" id="image-input-'.$id.'">
-							<input type="submit" class="image-upload" id="'.$id.'" value="Upload">
-
-						</form>
-						
-				</body>
-			</html>';
+	$this->iframe_template->content = View::instance('v_photos_upload');
+	
+	$this->iframe_template->content->id = $id;
+	
+	echo $this->iframe_template;
 
 	}
 	
+
 /*-------------------------------------------------------------------------------------------------
 
 	Upload image, store temporarily and create thumbnail for 
@@ -43,12 +32,31 @@ class photos_controller extends base_controller {
 -------------------------------------------------------------------------------------------------*/	
 	public function p_upload () {
 	
-/* 		$image = Upload::upload($_FILES, "/temp/", array("jpg", "jpeg", "gif", "png", "JPG", "JPEG", "GIF", "PNG"), "profile_image_".$this->user->user_id);
+		$image_id = $_POST['photo-id'];
+/* 		echo Debug::dump($_FILES,"Contents of FILES"); */
+		$image = Upload::upload($_FILES, "/temp/", array("jpg", "jpeg", "gif", "png", "JPG", "JPEG", "GIF", "PNG"), "temp-original-".$image_id);
+		$imgObj = new Image(APP_PATH."temp/".$image);
 		
-		# Render the view
-		echo 1; */
+		# Resize and save thumbnail version of image
+		$file_parts = pathinfo($image);
+		$preview = "temp-preview-".$image_id.".".$file_parts['extension'];
+		$imgObj->resize(125,125,"crop");
+		$imgObj->save_image(APP_PATH."temp/".$preview, 100);
+
 		
-		echo Debug::dump($_FILES,"Contents of FILES");
+		$this->iframe_template->content = View::instance('v_photos_p_upload');
+ 		$this->iframe_template->content->original = $image; 	
+ 		$this->iframe_template->content->preview = $preview; 	
+ 		$this->iframe_template->content->image_id = $image_id; 	
 		
+		# Load client files
+		// $client_files = Array(
+						// "/js/image-iframe.js"
+	                    // );
+	    
+	    // $this->iframe_template->client_files = Utils::load_client_files($client_files);  
+
+		echo $this->iframe_template;
+
 	}
 }

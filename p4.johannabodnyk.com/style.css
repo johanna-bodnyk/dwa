@@ -31,6 +31,10 @@ a:hover {
 	text-decoration: underline;
 }
 
+.overflow-fix {
+	overflow: hidden;
+}
+
 /*-------------------- 
 	Headings 
 --------------------*/
@@ -221,9 +225,15 @@ a.button {
 	text-decoration:none;
 }
 
+a.on {
+	background-color: #888;
+}
+
 a.button:hover {
 	background-color: #bbb;
 }
+
+
 
 .count {
  font-size: 12px;
@@ -358,16 +368,32 @@ div.comment-wrapper h5 {
 	font-size: 14px;
 }
 
+div.comments form {
+	margin-top: 10px;
+}
+
+div.comments form textarea {
+	margin-bottom: 5px;
+	font-size: 13px;
+}
+
+div.comments form input[type="submit"]{
+	font-size: 11px;
+	padding: 2px 6px;
+	margin-bottom: 10px;
+}
+
 div.cooked-list-wrapper {
 	margin-top: 20px;
 	float: left;
 }
 
-
 div.cooked-list ul li{
 	margin: 5px 0;
 	font-size: 14px;
 }
+
+
 
 /*-------------------- 
 	Form styles
@@ -415,14 +441,14 @@ fieldset {
 	border: none;
 }
 
-fieldset label {
+fieldset#recipe-source label {
 	margin-left: 30px;
 	width: 210px;
 }
 
-span.instructions {
+p.instructions {
 	font-style: italic;
-	margin: 10px 0 0;
+	margin: -25px 0 25px 250px;
 	font-size: 12px;
 }
 
@@ -446,7 +472,7 @@ input[type="submit"], input[type="button"] {
 	border: 0;
 	height: auto;
 	margin-right: 15px;
-	float:left;
+/* 	float:left; */
 }
 
 input#add-another-photo {
@@ -486,10 +512,50 @@ p.form-button a.delete:hover {
 --------------------*/
 
 
+div#image-inputs {
+	margin: 0 0 35px 250px;
+}
+
 body#iframe {
 	background-color: #fff;
 }
 
 iframe.image-upload-iframe {
+	
+}
 
+/*-------------------- 
+	Add meal
+--------------------*/
+
+p.intro {
+	font-size: 20px;
+	text-align: right;
+}
+
+p#add-new-dish {
+	display: none;
+	margin-left: 250px;
+}
+
+fieldset#new-dish-fields {
+	padding: 20px;
+	margin-bottom: 25px;
+	background-color: #ddd;
+	display: none;
+}
+
+fieldset#new-dish-fields > h3{
+	color: #3B8686;
+	font-size: 29px;
+}
+
+fieldset#new-dish-fields input{
+	width: 520px;
+}
+
+input#date, input#time {
+	width: 150px;
+	display:inline-block;
+	margin-right: 20px;
 }
