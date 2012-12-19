@@ -118,9 +118,9 @@ $(document).ready(function() {
 	
 	var comment_form_options = {
 		clearForm: true,
-		success: function(response) {
-			console.log(response);
-			$('.dish-comments').append(response);
+		success: function(response, statusText, xhr, $form) {
+			console.log($form);
+			$($form).prev('ul').append(response);
 		}	
 	}
 	
@@ -212,8 +212,11 @@ $(document).ready(function() {
 		
 	});
 	
-	
+	$('form').validationEngine();
 });
+
+
+
 
 //
 // Date picker for Add Meal page

@@ -6,15 +6,20 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />	
 	<meta name="description" content="Project 4 for Fall 2012 Harvard Extension School course CSCI E-75 &ndash; Dynamic Web Applications, by Johanna Bodnyk.">
 	
-	<link rel="stylesheet" type="text/css" href="/style.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="/css/yumbook.css" media="all" />
 	<link rel="stylesheet" type="text/css" href="/css/jquery/jquery-ui-1.9.2.custom.css" media="all" />
 	<link href='http://fonts.googleapis.com/css?family=Permanent+Marker' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="/css/validationEngine.jquery.css" type="text/css"/>
 	
 	<!-- JS -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
 	<script src="/js/jquery.form.js"></script>
 	<script src="/js/jquery.iframe.js"></script>
+	<script src="/js/languages/jquery.validationEngine-en.js" type="text/javascript" charset="utf-8">
+	</script>
+<script src="/js/jquery.validationEngine.js" type="text/javascript" charset="utf-8">
+	</script>
 	<script src="/js/yumbook.js"></script>
 				
 	<!-- Controller Specific JS/CSS -->

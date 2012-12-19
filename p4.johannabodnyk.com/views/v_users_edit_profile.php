@@ -4,11 +4,13 @@
 
 		<?=$message?>
 		
+		<p>Your Display Name and Avatar image are the things from your profile that other users can see. All other information here is private.</p>
+		
 		<!-- Edit profile form -->
 		<form name="edit-profile" action="/users/p_edit_profile" method="POST" enctype="multipart/form-data">
 			
 			<label for="first_name">First name</label>
-			<input type="text" name="first_name" id="first_name" value="<?=$user->first_name?>">
+			<input type="text" name="first_name" id="first_name" value="<?=$user->first_name?>" class="validate[required]">
 		
 			<label for="last_name">Last name</label>
 			<input type="text" name="last_name" id="last_name" value="<?=$user->last_name?>">
@@ -58,9 +60,6 @@
 					
 			<!-- Cancel -->
 			<p class="form-button"><a class="button" href="/users/profile">Cancel</a></p>
-			
-			<!-- Delete account -->
-			<p class="form-button"><a class="button delete" href="/users/delete">Delete Account</a></p>
 			
 		</form>
 
