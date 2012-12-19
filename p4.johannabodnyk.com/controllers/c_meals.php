@@ -164,6 +164,7 @@ class meals_controller extends base_controller {
 				# Build file names for various sizes of this image
 				$full = "image-".$image_id."-full.jpg";
 				$stream = "image-".$image_id."-402x300.jpg";
+				$stream_closed = "image-".$image_id."-194x125.jpg";
 				$preview = "image-".$image_id."-125x125.jpg";
 				$thumb = "image-".$image_id."-93x93.jpg";
 				
@@ -174,7 +175,10 @@ class meals_controller extends base_controller {
 				$imgObj = new Image(APP_PATH."temp/".$file_name);
 				
 				$imgObj->resize(402,300,"crop");
-				$imgObj->save_image(APP_PATH."uploads/".$stream, 100);	
+				$imgObj->save_image(APP_PATH."uploads/".$stream, 100);
+				
+				$imgObj->resize(194,125,"crop");
+				$imgObj->save_image(APP_PATH."uploads/".$stream_closed, 100);
 
 				$imgObj->resize(93,93,"crop");
 				$imgObj->save_image(APP_PATH."uploads/".$thumb, 100);
