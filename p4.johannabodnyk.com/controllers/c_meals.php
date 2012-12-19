@@ -62,7 +62,7 @@ class meals_controller extends base_controller {
 		$this->template->content->dish_name = $dish_name;
 				
 		# Set variable for "current" navigation style
-		$this->template->nav = "meals";
+		$this->template->nav = "add_meal";
 		
 		# Render the view
 		echo $this->template;
@@ -230,14 +230,32 @@ class meals_controller extends base_controller {
 		
 		if ($subset == 'yours') {
 			$where_condition = "WHERE user_id = ".$this->user->user_id;
+			$h2 = "You've been eating...";
 		}
 		
 		else if ($subset == 'user') {
 			$where_condition = "WHERE user_id = ".$subset_id;
+			
+			$q = "SELECT display_name
+				FROM users ".$where_condition;
+				
+			$display_name = DB::instance(DB_NAME)->select_field($q);
+			
+			$h2 = $display_name." is eating...";
 		}
 		
 		else if ($subset == 'meal') {
+		
 			$where_condition = "WHERE meal_id = ".$subset_id;
+			
+			$q = "SELECT meal_date
+				FROM meals ".$where_condition;
+				
+			$meal_date = DB::instance(DB_NAME)->select_field($q);
+			$meal_date = date('F j, Y', $meal_date);
+			
+			$h2 = "A meal on ".$meal_date."...";
+			
 		}
 		
 		else {
@@ -263,6 +281,8 @@ class meals_controller extends base_controller {
 			
 			
 			$where_condition = "WHERE user_id IN (".$users_followed.")";
+			
+			$h2 = "Your friends are eating...";
 		}
 		
 		$q = "SELECT meal_id
@@ -281,7 +301,9 @@ class meals_controller extends base_controller {
 		
 		# Set variable for "current" navigation style
 		$this->template->nav = "stream";		
-						
+		$this->template->title = "Yumstream";		
+		$this->template->content->h2 = $h2;
+		
 		$this->template->content->meals = $meals;
 		
 		 		echo Debug::dump($meals,"Contents of POST");

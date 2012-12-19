@@ -1,4 +1,4 @@
-<h2>Your friends are eating...</h2>
+<h2><?=$h2?></h2>
 		
 		<ul id="yumstream">
 		

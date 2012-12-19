@@ -44,33 +44,33 @@
 			
 			<!-- Main navigation -->
 			<ul id="main-nav">
-				<li><a href="#"
-					<? if ($nav == "add"): ?>
+				<li><a href="/meals/add"
+					<? if ($nav == "add_meal"): ?>
 						class="current"
 					<? endif; ?>
 				>Add a meal</a></li>
-				<li><a href="#"
+				<li><a href="/users/userlist"
 					<? if ($nav == "friends"): ?>
 						class="current"
 					<? endif; ?>	
 				>Your friends</a></li>
-				<li><a href="#"
-					<? if ($nav == "dishes"): ?>
+				<li><a href="/dishes/add"
+					<? if ($nav == "add_dish"): ?>
 						class="current"
 					<? endif; ?>	
-				>Your dishes</a></li>
+				>Add a <br>dish</a></li>
 				<div class="clear"></div>
-				<li><a href="#"
+				<li><a href="/meals/view/yours"
 					<? if ($nav == "meals"): ?>
 						class="current"
 					<? endif; ?>	
 				>Your meals</a></li>
-				<li><a href="#"
+				<li><a href="/meals/view/stream"
 					<? if ($nav == "stream"): ?>
 						class="current"
 					<? endif; ?>	
 				>Friends' meals</a></li>
-				<li><a href="#"
+				<li><a href="/users/edit_profile"
 					<? if ($nav == "account"): ?>
 						class="current"
 					<? endif; ?>	
