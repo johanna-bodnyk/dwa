@@ -164,6 +164,52 @@ div#login form {
 
 
 /*-------------------- 
+	Edit Profile
+--------------------*/
+
+div#current-image {
+	margin-left: 250px;
+}
+
+div#current-image input {
+	font-size: 14px;
+	float: none;
+	display: inline;
+	margin: 0;
+}
+
+div#current-image p.instructions {
+	margin: 0;
+	font-size: 16px;
+}
+
+div#current-image label {
+	font-family: 'Trebuchet MS', sans-serif;
+	font-size: 16px;
+	float: none;
+	margin: 0;
+}
+
+div#current-image input[type="radio"] {
+	width: auto;
+}
+
+img#default-avatar-preview {
+	display: none;
+}
+
+div#current-image input#profile-image {
+	display: none;
+	padding: 0;
+}
+
+div#current-image div#image-previews {
+	height: 60px;
+	margin-bottom: 10px;
+}
+
+
+/*-------------------- 
 	Stream
 --------------------*/
 
@@ -171,6 +217,15 @@ li.meal {
 	margin-bottom: 30px;
 	padding-bottom: 30px;
 	border-bottom: #bbb 1px solid;
+	overflow: hidden;
+	clear: both;
+}
+
+li.dish {
+	margin-bottom: 20px;
+	overflow: hidden;
+	clear: both;
+	position: relative;
 }
 
 div.images {
@@ -185,6 +240,10 @@ img.cover {
 img.thumb {
 	padding: 10px 10px 0 0;
 	float: left;
+}
+
+img.small-cover {
+	display: none;
 }
 
 img.last {
@@ -233,8 +292,6 @@ a.button:hover {
 	background-color: #bbb;
 }
 
-
-
 .count {
  font-size: 12px;
 }
@@ -279,41 +336,49 @@ li.comment span.comment-date {
 	font-size: 11px;
 }
 
-ul.other-dishes {
-	clear: both;
-	padding: 0;
-	margin: 0;
+a.dish-toggle {
+	float: right;
+	margin-top: 10px;
 }
 
-ul.other-dishes p {
+li.closed a.dish-toggle {
+	position: absolute;
+	bottom: 0;
+	right: 10px;
+	margin-top: 10px;
+}
+
+li.closed {
+	float: left;
+	width: 390px;
+	margin: 20px 20px 20px 0;
+	clear: none;
+}
+
+li.closed .toggle {
+	display: none;
+}
+
+li.closed p {
 	margin: 10px 0;
 }
 
-ul.other-dishes li{
-	float: left;
-	width: 400px;
-	margin: 20px 20px 0 0;
-}
-
-ul.other-dishes li.right {
-	margin-right: 0;
-}
-
-img.other {
+li.closed img.small-cover {
+	display: block;
 	float: left;
 	margin-right: 16px;
 	padding: 0;
 }
 
-div.other-info {
+li.closed div.info {
 	margin-left: 208px;
 }
 
-div.other-info p {
+li.closed div.info p {
 	margin: 0 0 4px 0;;
 }
 
-ul.other-dishes li.clear, div.clear {
+div.clear {
 	clear: both;
 	padding: 0;
 	margin: 0;
@@ -328,6 +393,10 @@ ul.other-dishes li.clear, div.clear {
 a.top-right {
 	float: right;
 	margin-top: -60px;
+}
+
+a.open {
+	background-color: #888;
 }
 
 a.big {
@@ -393,7 +462,32 @@ div.cooked-list ul li{
 	font-size: 14px;
 }
 
+/*--------------------------
 
+	Add to stream controls
+
+---------------------------*/
+
+div#add-to-stream-panel {
+	background-color: #eee;
+	padding: 20px 20px 0 200px;
+	margin-bottom: 30px;
+	display: none;
+}
+
+div#add-to-stream-panel p {
+	margin-left: 40px;
+}
+
+div#add-to-stream-panel select {
+	display: inline;
+	font-size: 14px;
+	width: auto;
+}
+
+div#add-to-stream-panel a {
+	margin-left: 15px;
+}
 
 /*-------------------- 
 	Form styles
@@ -559,3 +653,13 @@ input#date, input#time {
 	display:inline-block;
 	margin-right: 20px;
 }
+
+/*----------------------------
+	User list
+-----------------------------*/
+
+a.followed {
+	font-weight: bold;
+}
+
+

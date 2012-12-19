@@ -1,6 +1,51 @@
 $(document).ready(function() {
 
 	//
+	// Avatar image uploading on Edit Profile form
+	//
+	
+	$('input#keep').click(function () {
+		$('input#profile-image').hide();
+		$('img#avatar-preview').show();
+		$('img#default-avatar-preview').hide();
+	});
+	
+	$('input#default').click(function () {
+		$('input#profile-image').hide();
+		$('img#avatar-preview').hide();
+		$('img#default-avatar-preview').show();
+	});
+	
+	$('input#replace').click(function () {
+		$('input#profile-image').show();
+		$('img#avatar-preview').hide();
+		$('img#default-avatar-preview').hide();
+	});
+	
+	//
+	// Add to Stream button and panel on Dish pages
+	//
+	
+	// Add to Stream button	- opens and closes Add to Meal panel, changes colors
+	$('#add-to-stream').click(function() {
+		$('div#add-to-stream-panel').slideToggle();
+		$(this).toggleClass('open');
+		return false;
+	});
+	
+	// Changes meal id in Add to Meal button href on change of meal date select element
+	$('#meal-selection').change(function() {
+		var href = $('#add-to-meal').attr('href');
+		console.log(href);	
+		var dish_id = href.substr(href.length-1);
+		console.log(dish_id);	
+		var meal_id = $(this).val();
+		console.log(meal_id);
+		$('#add-to-meal').attr('href', '/meals/add/'+meal_id+'/'+dish_id);
+	});
+	
+	
+	//
 	// Want/Unwant button on Dish and Stream pages
 	//
 	
@@ -18,7 +63,54 @@ $(document).ready(function() {
 		
 		return false;
 	
+	});	
+	
+	//
+	// Follow/Unfollow button on User list page
+	//
+	
+	$('a.follow-button').live('click', function() {
+	
+		var href = $(this).attr('href');
+	
+		$.ajax({
+			url: href,	
+		});
+		
+		$(this).text('Unfollow');
+		$(this).removeClass('follow-button').addClass('unfollow-button');
+		
+		var user_id = href.substr(href.length-1);
+		$(this).attr('href', '/users/unfollow/'+user_id);	
+		
+		$(this).prev('a').addClass('followed');
+		
+		return false;
+	
 	});
+	
+	$('a.unfollow-button').live('click', function() {
+	
+		var href = $(this).attr('href');
+	
+		$.ajax({
+			url: href,	
+		});
+		
+		$(this).text('Follow');
+		$(this).removeClass('unfollow-button').addClass('follow-button');
+		
+		var user_id = href.substr(href.length-1);
+		$(this).attr('href', '/users/follow/'+user_id);	
+		
+		$(this).prev('a').removeClass('followed');
+
+		
+		return false;
+	
+	});
+	
+	
 	
 	//
 	// Ajax submission for Comment forms
@@ -28,11 +120,11 @@ $(document).ready(function() {
 		clearForm: true,
 		success: function(response) {
 			console.log(response);
-			$('#dish-comments').append(response);
+			$('.dish-comments').append(response);
 		}	
 	}
 	
-	$('#add-comment').ajaxForm(comment_form_options);
+	$('.add-comment').ajaxForm(comment_form_options);
 	
 	//
 	// Add Dish and Add Meal image uploading controls:
@@ -99,6 +191,25 @@ $(document).ready(function() {
 	$('p#add-new-dish input').click(function() {
 		console.log("You clicked the add new dish button");
 		$('fieldset#new-dish-fields').show();
+	});
+	
+	//
+	//	Expand closed dishes on Stream page
+	//
+	
+	$('a.dish-toggle').click(function() {
+	
+		$(this).parent().toggleClass('closed');
+		if ($(this).text() === "Expand") {
+			$(this).text('Close');
+			$(this).addClass('on');
+		}
+		else {
+			$(this).text('Expand');
+			$(this).removeClass('on');
+		}
+		return false;
+		
 	});
 	
 	

@@ -1,5 +1,5 @@
 		<h2>Edit Your Profile</h2>
-		
+				
 		<!--If this is a new user's first time on this page (redirected from sign-up form), display a welcome message -->
 
 		<?=$message?>
@@ -27,25 +27,32 @@
 			<input type="password" name="password_check" id="password_check">
 					
 			<!-- Image section-->
-			<label for="profile_image">Photo</label>
+			<label for="profile_image">Avatar</label>
 				
-				<!-- If user has an existing uploaded image, display current image -->
-				<? if ($user->profile_image != "placeholder.png"): ?>
-					<p class="instructions">Current photo:</p>
-					<img src="/uploads/<?=$user->profile_image?>" alt="Profile image for <?=$user->display_name?>">
-					<p class="instructions">To replace the current photo, choose a new file from your computer:</p>
-				<? endif; ?>
-				
-				<!-- File input to upload new image-->
-				<input type="file" name="profile_image" id="profile_image">
-				
-				<!-- If user has an existing uploaded image, display checkbox to delete it-->
-				<? if ($user->profile_image != "placeholder.png"): ?>
-					<p class="instructions">To delete the current photo without replacing it, check here:</p>
-					<input type="checkbox" name="delete_photo" id="delete_photo">
-					<label class="check-label" for="delete_photo">Delete current photo</label>
-				<? endif; ?>
-				
+				<div id="profile-image-controls">
+					<!-- If user has an existing uploaded image, display current image -->
+					<div id="current-image" >
+						<div id="image-previews">
+						<img id="avatar-preview" src="/uploads/<?=$user->profile_image?>" alt="Avatar for <?=$user->display_name?>">
+						<img id="default-avatar-preview" src="/uploads/default_avatar.png" alt="Placeholder avatar image">
+						<input type="file" name="profile_image" id="profile-image">
+						</div>
+						<!-- File input to upload new image-->
+
+						<? if ($user->profile_image != "default_avatar.png"): ?>
+						<input type="radio" name="image_choice" id="keep" value="keep">
+						<label for="keep">Keep current image</label><br>
+						<? endif; ?>
+						<input type="radio" name="image_choice" id="default" value="default">
+						<label for="default">Use default image</label>
+						<br>
+						<input type="radio" name="image_choice" id="replace" value="replace">
+						<label for="replace">Upload new image</label><br>
+
+					
+					
+					
+				</div>
 			
 			<input type="submit" value="Update Profile" id="submit-button">
 					

@@ -69,9 +69,8 @@ class users_controller extends base_controller {
 			$_POST['created'] = Time::now();
 			$_POST['modified'] = Time::now();
 			
-			# Add placeholder images to POST array
-			$_POST['profile_image'] = "placeholder.png";
-			$_POST['thumb_image'] = "placeholder_thumb.png";
+			# Add default avatar to POST array
+			$_POST['profile_image'] = "default_avatar.png";
 
 			# Create token and add to POST array
 			$token = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string());
@@ -150,7 +149,7 @@ class users_controller extends base_controller {
 		Router::redirect("/");
 	}
 
-	/*-------------------------------------------------------------------------------------------------
+/*-------------------------------------------------------------------------------------------------
 
 	Edit profile form
 	
@@ -192,49 +191,39 @@ class users_controller extends base_controller {
 	Edit profile form processing
 	
 -------------------------------------------------------------------------------------------------*/		
-	public function p_edit_profile() {
-
-		# If "Delete photo" box was checked and no new image was submitted
-		# add placeholder images to $_POST array to overwrite existing image
-		if ((array_key_exists('delete_photo', $_POST)) && ($_FILES['profile_image']['name'] == "")) {
-			$_POST['profile_image'] = "placeholder.png";
-			$_POST['thumb_image'] = "placeholder_thumb.png";
+	public function p_edit_profile() {		
+		
+		# If "Default" image option was checked, add placeholder filename to $_POST array
+		if ($_POST['image_choice'] == "default") {
+			$_POST['profile_image'] = "default_avatar.png";
 		}
 		
-		# If an image was submitted, upload to server,
-		# resize and save profile (250x250) and thumb (75x75) versions,
-		# and add the filenames to the $_POST array
-		if ($_FILES['profile_image']['name'] != "") {
 		
+		# If "Replace" was checked, upload submitted to server,
+		# resize to 40x40 and add the filename to the $_POST array
+		if ($_POST['image_choice'] == "replace") {
+		
+			$filename = "avatar-user-".$this->user->user_id;
+			
 			# Upload submitted image to server
-			$profile_image = Upload::upload($_FILES, "/uploads/", array("jpg", "jpeg", "gif", "png", "JPG", "JPEG", "GIF", "PNG"), "profile_image_".$this->user->user_id);
+			$profile_image = Upload::upload($_FILES, "/uploads/", array("jpg", "jpeg", "gif", "png", "JPG", "JPEG", "GIF", "PNG"), $filename);
 			
 			# Instantiate new image object using uploaded file
 			$imgObj = new Image(APP_PATH."uploads/".$profile_image);
 			
-			# Resize and save profile version of image
- 			$imgObj->resize(250,250,"crop");
-			$imgObj->save_image(APP_PATH."uploads/".$profile_image, 100);
+			# Resize and resave
+ 			$imgObj->resize(50,50,"crop");
+			$imgObj->save_image(APP_PATH."uploads/".$filename.'.jpg', 100);
 			
-			# Resize and save thumbnail version of image
-			$file_parts = pathinfo($profile_image);
-			$thumb_image = "thumb_image_".$this->user->user_id.".".$file_parts['extension'];
-			$imgObj->resize(75,75,"crop");
-			$imgObj->save_image(APP_PATH."uploads/".$thumb_image, 100);
-
-			# Add image filenames and alt text to POST array
-			$_POST['profile_image'] = $profile_image;
-			$_POST['thumb_image'] = $thumb_image;
+			# Add image filename to POST array
+			$_POST['profile_image'] = $filename.'.jpg';
 
 		}
 		
-		# (If "Delete photo" is unchecked and no new image was submitted,
-		# do nothing -- image fields in DB remains as-is)
+		# If "Keep" image option was checked, do nothing -- image field in DB remains as-is)
 
-		# Remove "Delete photo" checkbox from $_POST array if it exists
-		if (array_key_exists('delete_photo', $_POST)) {
-			unset($_POST['delete_photo']);
-		}
+		# Remove image choice $_POST array i
+		unset($_POST['image_choice']);
 		
 		# Check to see if a password was submitted. If so, add salt and hash.
 		if ($_POST['password'] != "") {
@@ -273,8 +262,82 @@ class users_controller extends base_controller {
 		# Update DB with new profile information (including empty fields)
 		DB::instance(DB_NAME)->update("users", $_POST, "WHERE token = '".$this->user->token."'");		
 	
- 		Router::redirect('/users/profile'); 
-
 	}
 
+/*-------------------------------------------------------------------------------------------------
+
+	User list
+	
+-------------------------------------------------------------------------------------------------*/		
+	public function userlist() {		
+	
+		$this->template->content = View::instance("v_users_list");
+			
+		$q = "SELECT user_id, display_name, profile_image
+			FROM users
+			WHERE user_id != ".$this->user->user_id;
+			
+		$users = DB::instance(DB_NAME)->select_fields($q);
+		
+		$this->template->content->users = $users;
+		
+		# Set variable for "current" navigation style
+		$this->template->nav = "friends";
+
+		echo $this->template;
+	}
+	
+/*-------------------------------------------------------------------------------------------------
+
+	Follow a user
+	
+-------------------------------------------------------------------------------------------------*/
+	public function follow($user_id_followed = NULL) {
+		
+		# Sanitize by ensuring $user_id_followed is numeric 
+		if (is_numeric($user_id_followed)) {
+		
+			# If so, add entry to users_users table
+			$data['created'] = Time::now();
+			$data['user_id'] = $this->user->user_id;
+			$data['user_id_followed'] = $user_id_followed;
+			
+			DB::instance(DB_NAME)->insert("users_users", $data);
+			
+			echo "1";
+		}
+
+		else {
+			echo "0";
+			return false;
+		}
+		
+	}
+
+
+/*-------------------------------------------------------------------------------------------------
+
+	Stop following a user
+	
+-------------------------------------------------------------------------------------------------*/	
+	public function unfollow($user_id_followed = NULL, $source_page = NULL) {
+
+		# Sanitize by ensuring $user_id_followed is numeric 
+		if (is_numeric($user_id_followed)) {
+			
+			# If so, remove entry from users_users table
+			$where_condition = "WHERE
+				user_id = ".$this->user->user_id."
+				AND user_id_followed = ".$user_id_followed;
+				
+			DB::instance(DB_NAME)->delete("users_users", $where_condition);
+		}
+
+		else {
+			echo "0";
+			return false;		
+		}
+		
+
+	}
 }

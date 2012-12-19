@@ -1,4 +1,4 @@
-	<? if ($meal_id != ""): ?>
+	<? if (isset($meal_id)): ?>
 		
 		<h2>Add another dish...</h2>
 		
@@ -26,8 +26,8 @@
 	<? endif; ?>
 			
 			<label for="dish">Dish name</label>
-			<input type="text" name="dish" id="dish">
-			<input type="hidden" name="dish_id" id="dish_id">
+			<input type="text" name="dish" id="dish" value="<?=$dish_name?>">
+			<input type="hidden" name="dish_id" id="dish_id" value="<?=$dish_id?>">
 			<p id="add-new-dish">No matching dishes found. Create a new dish with this name?
 				<input type="button" value="Create new dish">
 			</p>

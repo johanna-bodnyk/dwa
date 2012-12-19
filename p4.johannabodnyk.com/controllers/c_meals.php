@@ -30,23 +30,36 @@ class meals_controller extends base_controller {
 	Add meal form
 	
 -------------------------------------------------------------------------------------------------*/	
-	public function add ($meal_id = NULL) {
+	public function add ($meal_id = NULL, $dish_id = NULL) {
 	
 		# Set up the view
 		$this->template->content = View::instance("v_meals_add");
 		$this->template->title = "Add a meal";
 
-		if ($meal_id != "") {
+		if ($meal_id != "" && $meal_id != "new_meal") {
 			$q = "SELECT meal_date
 				FROM meals
 				WHERE meal_id = ".$meal_id;
 			$meal_date = DB::instance(DB_NAME)->select_field($q);
 			$meal_date = date('F j, Y \a\t g:ia', $meal_date);
+			$this->template->content->meal_id = $meal_id;
 			$this->template->content->meal_date = $meal_date;
 		}
 		
+		if ($dish_id != "") {
+			$q = "SELECT name
+				FROM dishes
+				WHERE dish_id = ".$dish_id;
+			
+			$dish_name = DB::instance(DB_NAME)->select_field($q);
+		}
+		else {
+			$dish_name = "";
+		}
+		
 		# Send necessary data/variables to the view
-		$this->template->content->meal_id = $meal_id;
+		$this->template->content->dish_id = $dish_id;
+		$this->template->content->dish_name = $dish_name;
 				
 		# Set variable for "current" navigation style
 		$this->template->nav = "meals";
@@ -202,76 +215,83 @@ class meals_controller extends base_controller {
 	
 /*-------------------------------------------------------------------------------------------------
 
-	View dish page
+	Meal stream pages; individual meal view page
 	
 -------------------------------------------------------------------------------------------------*/	
-	public function view ($dish_id) {
-	
-		# Set up the view
-		$this->template->content = View::instance("v_dishes_view");
-		
-		# ADD ERROR CHECKING TO MAKE SURE AN ID WAS SUBMITTED
-		
-		$q = "SELECT *
-			FROM dishes
-			WHERE dish_id = ".$dish_id;
-		
-		$dish = DB::instance(DB_NAME)->select_row($q);
-		
-		$q = "SELECT image_id
-			FROM images
-			WHERE referent_type = 'dish'
-			AND referent_id = ".$dish_id;
-			
-		$images = DB::instance(DB_NAME)->select_rows($q);	
-		
-		# Add display name for dish owner (or "You" if it belongs to current user) to dish array
-		if ($dish['user_id'] == $this->user->user_id) {
-			$dish['display_name'] = "You";
-		}
-		else {
-			$q = "SELECT display_name
-				FROM users
-				WHERE users.user_id = ".$dish['user_id'];
-	
-			$dish['display_name'] = DB::instance(DB_NAME)->select_field($q);
-		}
-		
-		# Convert timestamp to readable dates 
-		# (Month XX, XXXX, XX:XXpm)			
-		$dish['created'] = date('F j, Y', $dish['created']);
-		
-		# If there's a source link but no name, use link as name 
-		if ($dish['source_name'] == "" && $dish['source_link'] != "") {
-			$dish['source_name'] = $dish['source_link'];
-		}
 
-		# Remove any remaining empty source name or source link elements		
-		if ($dish['source_link'] == "") {
-			unset($dish['source_link']);
-		}			
-		if ($dish['source_name'] == "") {
-			unset($dish['source_name']);
+	public function view ($subset = NULL, $subset_id = NULL) {
+
+		# Set up the view
+		$this->template->content = View::instance("v_meals_view");
+		
+		if ($subset == 'user' && $subset_id == $this->user->user_id) {
+			$subset = 'yours';
 		}
 		
-		# If there's still a source link, build HTML using it as link for source name
-		if (isset($dish['source_link'])) {
-			$dish['source_name'] = "<a href='".$dish['source_link']."'>".$dish['source_name']."</a>";
+		if ($subset == 'yours') {
+			$where_condition = "WHERE user_id = ".$this->user->user_id;
 		}
 		
-		# Set page title
-		$this->template->title = $dish['name'];
-	
-		# Send necessary data/variables to the view
-		$this->template->content->dish = $dish;
-		$this->template->content->images = $images;
-	
+		else if ($subset == 'user') {
+			$where_condition = "WHERE user_id = ".$subset_id;
+		}
+		
+		else if ($subset == 'meal') {
+			$where_condition = "WHERE meal_id = ".$subset_id;
+		}
+		
+		else {
+			
+			# Query DB to figure out who the user is following
+			$q = "SELECT * 
+			FROM users_users
+			WHERE user_id = ".$this->user->user_id;
+			
+			$connections = DB::instance(DB_NAME)->select_array($q, 'user_id_followed');
+			
+			# From results of query, create a comma-separated list 
+			# of the user IDs current user is following
+			$users_followed = "";
+			
+			foreach ($connections as $key => $value) {
+				$users_followed .= $key;
+				$users_followed .= ",";
+			}
+			
+			# Remove the trailing comma
+			$users_followed = rtrim($users_followed, ",");
+			
+			
+			$where_condition = "WHERE user_id IN (".$users_followed.")";
+		}
+		
+		$q = "SELECT meal_id
+				FROM meals ".$where_condition;
+		
+		$meal_ids = DB::instance(DB_NAME)->select_array($q, 'meal_id');
+		
+		$meals = "";
+		
+		foreach ($meal_ids as $meal_id => $value) {
+			
+			$meals[$meal_id] = Load::meal($meal_id, $this->user->user_id);
+		
+		}
+		
+		
 		# Set variable for "current" navigation style
-		$this->template->nav = "dishes";
+		$this->template->nav = "stream";		
+						
+		$this->template->content->meals = $meals;
 		
+		 		echo Debug::dump($meals,"Contents of POST");
+
 		# Render the view
 		echo $this->template;
+	
 	}
+	
+
 
 	
 }

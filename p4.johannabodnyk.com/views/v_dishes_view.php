@@ -1,6 +1,19 @@
 		<h2><?=$dish['name']?></h2>
 		
-		<a class="button top-right big" href="#">Add to Stream</a>
+		<a class="button top-right big" id="add-to-stream" href="#">Add to Stream</a>
+		
+		<div id="add-to-stream-panel">
+			<h4>Add this dish to your stream as...</h4>
+			<p>...a new meal <a class="button" href="/meals/add/new_meal/<?=$dish_id?>">Add new meal</a></p>
+			<p>...part of your meal on 
+				<select name="meal-selection" id="meal-selection">
+					<? foreach ($recent_meals as $meal): ?>
+						<option value="<?=$meal['meal_id']?>"><?=$meal['meal_date']?></option>
+					<? endforeach; ?>
+				</select>	
+					<a class="button" id="add-to-meal" href="/meals/add/<?=$recent_meals['0']['meal_id']?>/<?=$dish_id?>">Add to meal</a></p>
+			
+		</div>
 				
 		<div class="images">
 
@@ -40,7 +53,13 @@
 			<p class="note data">!22 <a class="button" href="#">Like</a></p> -->
 			<h3 class="label">Wants</h3>
 			<p class="note data" id="wants"><?=$dish['wants']?>
-			<?=$want_button?>
+			
+			<? if ($dish['wanted'] == NULL): ?>
+				<a class="button" id="want-button" href="/dishes/want/<?=$dish_id?>">Add to Want to Cook list</a>
+			<? else: ?>
+				<a class="button on" id="want-button" href="/dishes/unwant/<?=$dish_id?>">Remove from Want to Cook list</a>
+			<? endif; ?>
+			
 			<!-- <h3 class="label">Rating</h3>
 			<p class="note data">***ADD RATING CONTROLS</p> -->
 			
@@ -56,17 +75,17 @@
 				<h3>Comments...</h3>
 				<div class="comments">
 					<h4>...on this dish</h4>
-					<ul id="dish-comments">
+					<ul class="dish-comments">
 						<? foreach ($dish_comments as $c): ?>
 							<li class="comment">
-								<img class="avatar" src="http://placekitten.com/40/40">
+								<img class="avatar" src="/uploads/<?=$c['profile_image']?>">
 								<span class="comment-user"><a href="/meals/stream/<?=$c['user_id']?>"><?=$c['display_name']?></a></span>
 								<span class="comment-text"><?=$c['comment']?></span>
 								<span class="comment-date"><br><?=$c['created']?></span>
 							</li>
 						<? endforeach; ?>
 					</ul>
-					<form id="add-comment" action="/dishes/add_comment" method="POST">
+					<form class="add-comment" action="/dishes/add_comment" method="POST">
 						<textarea name="comment" rows="2" cols="53"></textarea>
 						<input name="referent_type" type="hidden" value="dish">
 						<input name="referent_id" type="hidden" value="<?=$dish_id?>">
@@ -86,7 +105,7 @@
 							<? $last_meal_id = $c['meal_id']?>
 							<? endif; ?>
 							<li class="comment">
-								<img class="avatar" src="http://placekitten.com/40/40">
+								<img class="avatar" src="/uploads/<?=$c['profile_image']?>">
 								<span class="comment-user"><a href="/meals/stream/<?=$c['user_id']?>"><?=$c['display_name']?></a></span>
 								<span class="comment-text"><?=$c['comment']?></span>
 								<span class="comment-date"><br><?=$c['created']?></span>

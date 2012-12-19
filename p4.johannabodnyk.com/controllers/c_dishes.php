@@ -105,6 +105,7 @@ class dishes_controller extends base_controller {
 				# Build file names for various sizes of this image
 				$full = "image-".$image_id."-full.jpg";
 				$stream = "image-".$image_id."-402x300.jpg";
+				$stream_closed = "image-".$image_id."-194x125.jpg";
 				$preview = "image-".$image_id."-125x125.jpg";
 				$thumb = "image-".$image_id."-93x93.jpg";
 				
@@ -115,7 +116,10 @@ class dishes_controller extends base_controller {
 				$imgObj = new Image(APP_PATH."temp/".$file_name);
 				
 				$imgObj->resize(402,300,"crop");
-				$imgObj->save_image(APP_PATH."uploads/".$stream, 100);	
+				$imgObj->save_image(APP_PATH."uploads/".$stream, 100);
+
+				$imgObj->resize(194,125,"crop");
+				$imgObj->save_image(APP_PATH."uploads/".$stream_closed, 100);	
 
 				$imgObj->resize(93,93,"crop");
 				$imgObj->save_image(APP_PATH."uploads/".$thumb, 100);
@@ -156,146 +160,37 @@ class dishes_controller extends base_controller {
 	
 		# ADD ERROR CHECKING TO MAKE SURE AN ID WAS SUBMITTED
 		
-		# Get information for this dish from dishes table
-		$q = "SELECT *
-			FROM dishes
-			WHERE dish_id = ".$dish_id;
+		# Load information for this dish	
+		$dish = Load::dish($dish_id, $this->user->user_id);
 		
-		$dish = DB::instance(DB_NAME)->select_row($q);
+		# Load images for this dish		
+		$images = Load::dish_images('dish', $dish_id);
 		
-		#
-		#	IMAGES
-		#
-		
-		# Get images for this dish
-		$q = "SELECT image_id
-			FROM images
-			WHERE referent_type = 'dish'
-			AND referent_id = ".$dish_id;
-			
-		$images = DB::instance(DB_NAME)->select_rows($q);	
+		# Load comments for dish and for meals featuring this dish
+		$dish_comments = Load::dish_comments($dish_id);
+		$meal_comments = Load::meal_comments($dish_id, "all");
 		
 		#
-		# ADDED BY
+		# RECENT MEALS FOR ADD TO STREAM DIALOG DROPDOWN
 		#
 		
-		# Add display name for dish owner (or "You" if it belongs to current user) to dish array
-		if ($dish['user_id'] == $this->user->user_id) {
-			$dish['display_name'] = "You";
-		}
-		else {
-			$q = "SELECT display_name
-				FROM users
-				WHERE users.user_id = ".$dish['user_id'];
-	
-			$dish['display_name'] = DB::instance(DB_NAME)->select_field($q);
-		}
-				
-		#
-		# SOURCE
-		#
-		
-		# If there's a source link but no name, use link as name 
-		if ($dish['source_name'] == "" && $dish['source_link'] != "") {
-			$dish['source_name'] = $dish['source_link'];
-		}
-
-		# Remove any remaining empty source name or source link elements		
-		if ($dish['source_link'] == "") {
-			unset($dish['source_link']);
-		}			
-		if ($dish['source_name'] == "") {
-			unset($dish['source_name']);
-		}
-		
-		# If there's still a source link, build HTML using it as link for source name
-		if (isset($dish['source_link'])) {
-			$dish['source_name'] = "<a href='".$dish['source_link']."'>".$dish['source_name']."</a>";
-		}
-		
-		#
-		# DATES (ADDED AND LAST EATEN)
-		#
-		
-		# Add date of last meal featuring this dish to dish array
-		$q = "SELECT MAX(meals.meal_date) 
-			FROM meals, meals_dishes 
-			WHERE meals.meal_id = meals_dishes.meal_id 
-			AND meals_dishes.dish_id = ".$dish_id;
-		
-		$dish['last_date'] = DB::instance(DB_NAME)->select_field($q);		
-		
-		# Convert timestamps to readable dates 	
-		if ($dish['last_date'] != 0) {
-			$dish['last_date'] = date('F j, Y', $dish['last_date']);
-		}
-		$dish['created'] = date('F j, Y', $dish['created']);
-		
-		#
-		# WANTS
-		#
-				
-		# Add number of wants to dish array
-		$q = "SELECT count(want_id) 
-			FROM wants
-			WHERE dish_id = ".$dish_id;
-			
-		$wants = DB::instance(DB_NAME)->select_field($q);	
-		
-		$dish['wants'] = $wants;
-		
-		# Check to see whether current user already wanted dish
-		$q = "SELECT want_id
-			FROM wants
+		$q = "SELECT meal_id, meal_date
+			FROM meals
 			WHERE user_id = ".$this->user->user_id."
-			AND dish_id = ".$dish_id;
+			ORDER BY meal_date DESC LIMIT 5";
 			
-		$wanted = DB::instance(DB_NAME)->select_field($q);
+		$recent_meals = DB::instance(DB_NAME)->select_rows($q);
 		
-		# Create and pass HTML for want or unwant buttons accordingly 
-				# This is presentation in the controller, but it's so many variables -- the URL, the "on" class, the link text -- that it seemed worth hard-coding here,  and below in the want and unwant functions)
-		if (!$wanted) {
-			$want_button = '<a class="button" id="want-button" href="/dishes/want/'.$dish_id.'">Add to Want to Cook list</a>';
+		foreach ($recent_meals as &$recent_meal) {
+			$recent_meal['meal_date'] = date('F j, Y \a\t g:ia', $recent_meal['meal_date']);
 		}
-		else {
-			$want_button = '<a class="button on" id="want-button" href="/dishes/unwant/'.$dish_id.'">Remove from Want to Cook list</a>';
-		}
-		
-		#
-		# COMMENTS...
-		
-		$q = 'SELECT c.comment, c.created, u.user_id, u.display_name
-			FROM comments c, users u
-			WHERE c.user_id = u.user_id
-			AND c.referent_type = "dish"
-			AND c.referent_id ='.$dish_id;
-			
-		$dish_comments = DB::instance(DB_NAME)->select_rows($q);
-		
-		foreach ($dish_comments as &$comment) {
-			$comment['created'] = date('F j, Y \a\t g:ia', $comment['created']);
-		}
-		
-		$q = 'SELECT c.comment, c.created, u.user_id, u.display_name, m.meal_id, m.meal_date
-			FROM comments c, users u, meals m, meals_dishes md
-			WHERE c.referent_id = md.meal_dish_id
-			AND md.meal_id = m.meal_id
-			AND c.user_id = u.user_id
-			AND c.referent_type = "meal_dish"
-			AND md.dish_id ='.$dish_id.
-			' ORDER BY m.meal_date, m.meal_id, c.created';
-		
-		$meal_comments = DB::instance(DB_NAME)->select_rows($q);
-		
-		foreach ($meal_comments as &$comment) {
-			$comment['created'] = date('F j, Y \a\t g:ia', $comment['created']);
-			$comment['meal_date'] = date('F j, Y', $comment['meal_date']);
-		}
+				
 
 		#
-		# THIS DISH HAS BEEN COOKED... 
+		# THIS DISH HAS BEEN COOKED... SECTION
 		#
 		
+		# By current user
 		$q = "SELECT m.meal_id, m.meal_date 
 			FROM meals m, meals_dishes md 
 			WHERE md.meal_id = m.meal_id
@@ -308,6 +203,7 @@ class dishes_controller extends base_controller {
 			$your_meal['meal_date'] = date('F j, Y', $your_meal['meal_date']);
 		}
 		
+		# By other users
 		$q = "SELECT m.meal_id, m.meal_date, u.display_name, u.user_id
 			FROM meals m, meals_dishes md, users u
 			WHERE md.meal_id = m.meal_id
@@ -335,7 +231,7 @@ class dishes_controller extends base_controller {
 		# Send necessary data/variables to the view
 		$this->template->content->dish_id = $dish_id;
 		$this->template->content->dish = $dish;
-		$this->template->content->want_button = $want_button;
+		$this->template->content->recent_meals = $recent_meals;
 		$this->template->content->images = $images;
 		$this->template->content->dish_comments = $dish_comments;
 		$this->template->content->meal_comments = $meal_comments;
@@ -345,9 +241,9 @@ class dishes_controller extends base_controller {
 
 		# Set variable for "current" navigation style
 		$this->template->nav = "dishes";
-		
-		echo Debug::dump($meal_comments,"Contents of meal comments");
-		
+			
+		echo Debug::dump($dish,"Contents of dish");
+
 		# Render the view
 		echo $this->template;
 	}
@@ -365,7 +261,7 @@ class dishes_controller extends base_controller {
 
 		$comment_id = DB::instance(DB_NAME)->insert('comments', $_POST);
 		
-		$q = "SELECT c.comment, c.created, u.user_id, u.display_name
+		$q = "SELECT c.comment, c.created, u.user_id, u.display_name, u.profile_image
 			FROM comments c, users u
 			WHERE c.user_id = u.user_id
 			AND c.comment_id = ".$comment_id;
@@ -375,7 +271,7 @@ class dishes_controller extends base_controller {
 		$comment['created'] = date('F j, Y \a\t g:ia', $comment['created']);
 
 		$comment_html = '<li class="comment">
-							<img class="avatar" src="http://placekitten.com/40/40">
+							<img class="avatar" src="/uploads/'.$comment['profile_image'].'">
 							<span class="comment-user"><a href="/meals/stream/'.$comment['user_id'].'">'.$comment['display_name'].'</a></span>
 							<span class="comment-text">'.$comment['comment'].'</span>
 							<span class="comment-date"><br>'.$comment['created'].'</span>
@@ -386,7 +282,7 @@ class dishes_controller extends base_controller {
 	
 
 	
-	/*-------------------------------------------------------------------------------------------------
+/*-------------------------------------------------------------------------------------------------
 
 	Add dish to Want to Cook list
 	

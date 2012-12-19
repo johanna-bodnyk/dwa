@@ -1,0 +1,39 @@
+meals[
+
+
+
+meal		meal_id
+
+	meal_dish	meal_dish_id
+		dish 		name
+		meal_dish 	note
+		user 		display_name
+		user		user_id
+		meal		meal_date
+		wants		COUNT
+		wants		THISUSER?
+		comments	COUNT
+		comment		comment_id
+			user		user_id
+			user		display_name
+			comment		comment
+			comment		created
+
+
+Your Meals /yours/
+
+Laura's Meals /user/4
+
+All Friends Meals /friends/
+
+A Specific Meal /meal/2
+
+Dishes You Want to Cook
+
+
+SELECT d.name, md.note, u.display_name, u.user_id, m.meal_date
+FROM dishes d, meals_dishes md, users u, meals m
+WHERE d.dish_id = md.dish_id
+AND md.meal_id = m.meal_id
+AND m.user_id = u.user_id
+AND md.meal_dish_id = 9
