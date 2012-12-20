@@ -1,4 +1,4 @@
-
+	<h2>Choose who to follow...</h2>
 		<!-- User list -->
 		<? if($users): ?>
 		<ul id="userlist">

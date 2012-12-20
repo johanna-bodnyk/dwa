@@ -90,7 +90,7 @@ ul#utilitynav {
 	list-style-type:none;
 	font-size: 14px;
 	text-align: right;
-	width: 400px;
+	width: 570px;
 }
 
 ul#utilitynav li {
@@ -737,4 +737,19 @@ a.followed {
 }
 
 
+/*----------------------------
+	About page
+-----------------------------*/
 
+div#about-text {
+	padding-bottom: 40px;
+}
+
+
+div#about-text p {
+	margin: 7px 0;
+}
+
+div#about-text h3 {
+	margin-top: 25px;
+}

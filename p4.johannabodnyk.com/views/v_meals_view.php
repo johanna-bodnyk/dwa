@@ -14,7 +14,7 @@
 							<? foreach($dish['images'] as $key => $image): ?>
 								<? if($key == 0): ?>
 									<img class="cover toggle" src="/uploads/image-<?=$image['image_id']?>-402x300.jpg">
-									<img class="small-cover" src="/uploads/image-<?=$image['image_id']?>-194x125.jpg" height="123" width="192" style="border: 1px solid black">
+									<img class="small-cover" src="/uploads/image-<?=$image['image_id']?>-194x125.jpg">
 								<? elseif(($key)%4 == 0): ?>
 									<img class="thumb last toggle" src="/uploads/image-<?=$image['image_id']?>-93x93.jpg"><br>
 								<? else: ?>
