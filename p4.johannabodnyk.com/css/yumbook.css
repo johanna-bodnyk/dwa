@@ -424,6 +424,10 @@ h3.label {
 	padding-right: 10px;
 }
 
+h3.no-float {
+	float:none;
+}
+
 div.info p.data {
 	margin-left: 60px;
 	padding-top: 4px;

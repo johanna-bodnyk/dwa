@@ -34,13 +34,12 @@
 							<? if ($dish['liked'] == NULL): ?>
 								<a class="button" id="like-button" href="/dishes/like/<?=$dish['dish_id']?>">Like</a>
 							<? else: ?>
-								<a class="button on" id="like-button" href="/dishes/unlike/<?=$dish['dish_id']?>">U</a>
+								<a class="button on" id="like-button" href="/dishes/unlike/<?=$dish['dish_id']?>">Unlike</a>
 							<? endif; ?>
-							
 							</p>
-						<h3 class="label">Comments:</h3>
-						<div class="clear"></div>
-						</div>
+							
+							</div>
+						<h3 class="label no-float">Comments:</h3>
 						<div class="comments toggle">
 						
 							<ul class="dish-comments">
