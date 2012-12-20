@@ -37,9 +37,9 @@
 								<a class="button on" id="like-button" href="/dishes/unlike/<?=$dish['dish_id']?>">Unlike</a>
 							<? endif; ?>
 							</p>
-							
+							<h3 class="label no-float">Comments:</h3>
 							</div>
-						<h3 class="label no-float">Comments:</h3>
+						
 						<div class="comments toggle">
 						
 							<ul class="dish-comments">
