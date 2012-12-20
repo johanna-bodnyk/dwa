@@ -46,16 +46,16 @@ $(document).ready(function() {
 	
 	
 	//
-	// Want/Unwant button on Dish and Stream pages
+	// Like/Unlike button on Dish and Stream pages
 	//
 	
-	$('a#want-button').live('click', function() {
+	$('a#like-button').live('click', function() {
 	
 		$.ajax({
 			url: $(this).attr('href'),
 			success: function(response) {
 				console.log($(this));
-				$('p#wants').html(response);
+				$('p#likes').html(response);
 				
 				
 			}
@@ -142,7 +142,7 @@ $(document).ready(function() {
 	
 	// Remove uploaded image when 'Remove' button is clicked
 	$('.delete-new-image').live('click', function() {
-		console.log("You want to delete me?");
+		console.log("You like to delete me?");
 		var file_name = $(this).prev().val();
 		$(this).parent().hide();
 		$(this).parent().html('<input type="hidden" name="deleted-images[]" value="'+file_name+'">');

@@ -51,13 +51,13 @@
 			<? endif; ?>
 			<!-- <h3 class="label">Likes</h3>
 			<p class="note data">!22 <a class="button" href="#">Like</a></p> -->
-			<h3 class="label">Wants</h3>
-			<p class="note data" id="wants"><?=$dish['wants']?>
+			<h3 class="label">Likes</h3>
+			<p class="note data" id="likes"><?=$dish['likes']?>
 			
-			<? if ($dish['wanted'] == NULL): ?>
-				<a class="button" id="want-button" href="/dishes/want/<?=$dish_id?>">Add to Want to Cook list</a>
+			<? if ($dish['liked'] == NULL): ?>
+				<a class="button" id="like-button" href="/dishes/like/<?=$dish_id?>">Like</a>
 			<? else: ?>
-				<a class="button on" id="want-button" href="/dishes/unwant/<?=$dish_id?>">Remove from Want to Cook list</a>
+				<a class="button on" id="like-button" href="/dishes/unlike/<?=$dish_id?>">Unlike</a>
 			<? endif; ?>
 			
 			<!-- <h3 class="label">Rating</h3>

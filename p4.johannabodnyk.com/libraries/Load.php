@@ -37,20 +37,20 @@ class Load {
 			# WANTS
 			#
 					
-			# Add number of wants to array
-			$q = "SELECT count(want_id) 
-				FROM wants
+			# Add number of likes to array
+			$q = "SELECT count(like_id) 
+				FROM likes
 				WHERE dish_id = ".$meal_dishes[$meal_dish_id]['dish_id'];
 				
-			$meal_dishes[$meal_dish_id]['wants'] = DB::instance(DB_NAME)->select_field($q);
+			$meal_dishes[$meal_dish_id]['likes'] = DB::instance(DB_NAME)->select_field($q);
 			
-			# Check to see whether current user already wanted dish
-			$q = "SELECT want_id
-				FROM wants
+			# Check to see whether current user already liked dish
+			$q = "SELECT like_id
+				FROM likes
 				WHERE user_id = ".$user_id."
 				AND dish_id = ".$meal_dishes[$meal_dish_id]['dish_id'];
 				
-			$meal_dishes[$meal_dish_id]['wanted'] = DB::instance(DB_NAME)->select_field($q);
+			$meal_dishes[$meal_dish_id]['liked'] = DB::instance(DB_NAME)->select_field($q);
 			
 			# Comment count (for comments on this particular dish in this meal)
 			$q = "SELECT count(comment_id) 
@@ -147,20 +147,20 @@ class Load {
 		# WANTS
 		#
 				
-		# Add number of wants to dish array
-		$q = "SELECT count(want_id) 
-			FROM wants
+		# Add number of likes to dish array
+		$q = "SELECT count(like_id) 
+			FROM likes
 			WHERE dish_id = ".$dish_id;
 			
-		$dish['wants'] = DB::instance(DB_NAME)->select_field($q);
+		$dish['likes'] = DB::instance(DB_NAME)->select_field($q);
 		
-		# Check to see whether current user already wanted dish
-		$q = "SELECT want_id
-			FROM wants
+		# Check to see whether current user already liked dish
+		$q = "SELECT like_id
+			FROM likes
 			WHERE user_id = ".$user_id."
 			AND dish_id = ".$dish_id;
 			
-		$dish['wanted'] = DB::instance(DB_NAME)->select_field($q);
+		$dish['liked'] = DB::instance(DB_NAME)->select_field($q);
 				
 		return $dish;
 	

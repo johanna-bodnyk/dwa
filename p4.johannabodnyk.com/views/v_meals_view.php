@@ -29,20 +29,20 @@
 							<? endif; ?>
 							<p class="user toggle"><a href="/meals/stream/user/<?=$dish['user_id']?>"><?=$dish['display_name']?></a> <span class="date">| <?=$dish['meal_date']?></span></p>
 						<div class="buttons toggle">
-							<p class="wants" id="wants">
-							<span class="count">Wants: <?=$dish['wants']?> </span>							
-							<? if ($dish['wanted'] == NULL): ?>
-								<a class="button" id="want-button" href="/dishes/want/<?=$dish['dish_id']?>">Add to Want to Cook list</a>
+							<h3 class="label">Likes:</h3>
+							<p class="note data" id="likes"><?=$dish['likes']?>							
+							<? if ($dish['liked'] == NULL): ?>
+								<a class="button" id="like-button" href="/dishes/like/<?=$dish['dish_id']?>">Like</a>
 							<? else: ?>
-								<a class="button on" id="want-button" href="/dishes/unwant/<?=$dish['dish_id']?>">Remove from Want to Cook list</a>
+								<a class="button on" id="like-button" href="/dishes/unlike/<?=$dish['dish_id']?>">U</a>
 							<? endif; ?>
 							
 							</p>
-							<p class="comment-count">
-								<span class="count">Comments: <?=$dish['comment_count']?></span>
-							</p>
+						<h3 class="label">Comments:</h3>
+						<div class="clear"></div>
 						</div>
 						<div class="comments toggle">
+						
 							<ul class="dish-comments">
 							<? foreach ($dish['comments'] as $c): ?>
 								<li class="comment">

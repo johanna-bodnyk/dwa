@@ -284,46 +284,46 @@ class dishes_controller extends base_controller {
 	
 /*-------------------------------------------------------------------------------------------------
 
-	Add dish to Want to Cook list
+	Like dish
 	
 -------------------------------------------------------------------------------------------------*/	
-	public function want ($dish_id) {
+	public function like ($dish_id) {
 		
 	
-		# Check to make sure user does not already want this dish (to prevent ballot stuffing!)
-		$q = "SELECT want_id
-			FROM wants
+		# Check to make sure user does not already like this dish (to prevent ballot stuffing!)
+		$q = "SELECT like_id
+			FROM likes
 			WHERE dish_id = ".$dish_id."
 			AND user_id = ".$this->user->user_id;
 			
-		$wanted = DB::instance(DB_NAME)->select_field($q);
+		$liked = DB::instance(DB_NAME)->select_field($q);
 		
-		# If not, sanitize by ensuring $dish_id is numeric, then add new row to wants table		
-		if (!$wanted && is_numeric($dish_id)) {
+		# If not, sanitize by ensuring $dish_id is numeric, then add new row to likes table		
+		if (!$liked && is_numeric($dish_id)) {
 		
 			$data['created'] = Time::now();
 			$data['dish_id'] = $dish_id;
 			$data['user_id'] = $this->user->user_id;
-			$wanted = DB::instance(DB_NAME)->insert("wants", $data);
+			$liked = DB::instance(DB_NAME)->insert("likes", $data);
 			
-			# Get updated number of wants
-			$q = "SELECT count(want_id) 
-			FROM wants
+			# Get updated number of likes
+			$q = "SELECT count(like_id) 
+			FROM likes
 			WHERE dish_id = ".$dish_id;
 			
-			$wants = DB::instance(DB_NAME)->select_field($q);
+			$likes = DB::instance(DB_NAME)->select_field($q);
 
 		}	
 		
-		echo ($wants.'<a class="button on" id="want-button" href="/dishes/unwant/'.$dish_id.'">Remove from Want to Cook list</a>');
+		echo ($likes.'<a class="button on" id="like-button" href="/dishes/unlike/'.$dish_id.'">Unlike</a>');
 		
 	}
 /*-------------------------------------------------------------------------------------------------
 
-	Remove dish from Want to Cook list
+	Unlike
 	
 -------------------------------------------------------------------------------------------------*/		
-	public function unwant ($dish_id) {
+	public function unlike ($dish_id) {
 	
 		# Sanitize by ensuring $dish_id is numeric 
 		if (is_numeric($dish_id)) {
@@ -332,18 +332,18 @@ class dishes_controller extends base_controller {
 				user_id = ".$this->user->user_id."
 				AND dish_id = ".$dish_id;
 				
-			DB::instance(DB_NAME)->delete("wants", $where_condition);
+			DB::instance(DB_NAME)->delete("likes", $where_condition);
 			
-			# Get updated number of wants
-			$q = "SELECT count(want_id) 
-			FROM wants
+			# Get updated number of likes
+			$q = "SELECT count(like_id) 
+			FROM likes
 			WHERE dish_id = ".$dish_id;
 			
-			$wants = DB::instance(DB_NAME)->select_field($q);
+			$likes = DB::instance(DB_NAME)->select_field($q);
 
 		}	
 		
-		echo ($wants.'<a class="button" id="want-button" href="/dishes/want/'.$dish_id.'">Add to Want to Cook list</a>');
+		echo ($likes.'<a class="button" id="like-button" href="/dishes/like/'.$dish_id.'">Like</a>');
 	
 	}
 	
