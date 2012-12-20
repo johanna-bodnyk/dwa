@@ -21,7 +21,7 @@ class dishes_controller extends base_controller {
 	
 -------------------------------------------------------------------------------------------------*/		
 	public function index () {
-		Router::redirect('/dishes/stream'); 
+		Router::redirect('/dishes/add'); 
 	}
 
 
@@ -49,7 +49,7 @@ class dishes_controller extends base_controller {
 		$this->template->content->message = $message;
 		
 		# Set variable for "current" navigation style
-		$this->template->nav = "dishes";
+		$this->template->nav = "add_dish";
 		
 		# Render the view
 		echo $this->template;

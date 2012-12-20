@@ -212,7 +212,7 @@ class meals_controller extends base_controller {
 			Router::redirect('/meals/add/'.$meal_id);
 		}
 		else {
-			Router::redirect('/meals/stream/yours');
+			Router::redirect('/meals/view/yours');
 		}
 
 	}
@@ -228,6 +228,8 @@ class meals_controller extends base_controller {
 		# Set up the view
 		$this->template->content = View::instance("v_meals_view");
 		
+		$get_meals = TRUE;
+		
 		if ($subset == 'user' && $subset_id == $this->user->user_id) {
 			$subset = 'yours';
 		}
@@ -235,6 +237,7 @@ class meals_controller extends base_controller {
 		if ($subset == 'yours') {
 			$where_condition = "WHERE user_id = ".$this->user->user_id;
 			$h2 = "You've been eating...";
+			$nav = "your_meals";
 		}
 		
 		else if ($subset == 'user') {
@@ -246,6 +249,7 @@ class meals_controller extends base_controller {
 			$display_name = DB::instance(DB_NAME)->select_field($q);
 			
 			$h2 = $display_name." is eating...";
+			$nav = "friends_meals";
 		}
 		
 		else if ($subset == 'meal') {
@@ -260,6 +264,18 @@ class meals_controller extends base_controller {
 			
 			$h2 = "A meal on ".$meal_date."...";
 			
+			$q = "SELECT user_id
+				FROM meals ".$where_condition;
+			
+			$meal_owner = DB::instance(DB_NAME)->select_field($q);
+			
+			if ($meal_owner == $this->user->user_id) {
+				$nav = "your_meals";
+			}
+			else {
+				$nav = "friends_meals";
+			}
+			
 		}
 		
 		else {
@@ -270,7 +286,7 @@ class meals_controller extends base_controller {
 			WHERE user_id = ".$this->user->user_id;
 			
 			$connections = DB::instance(DB_NAME)->select_array($q, 'user_id_followed');
-			
+						
 			# From results of query, create a comma-separated list 
 			# of the user IDs current user is following
 			$users_followed = "";
@@ -279,39 +295,56 @@ class meals_controller extends base_controller {
 				$users_followed .= $key;
 				$users_followed .= ",";
 			}
-			
 			# Remove the trailing comma
 			$users_followed = rtrim($users_followed, ",");
+				
+			if ($users_followed != "") {
+				
+				$where_condition = "WHERE user_id IN (".$users_followed.")";
 			
-			
-			$where_condition = "WHERE user_id IN (".$users_followed.")";
+			}
+			else {
+				$get_meals = FALSE;
+			}
 			
 			$h2 = "Your friends are eating...";
+			$nav = "friends_meals";
 		}
 		
-		$q = "SELECT meal_id
-				FROM meals ".$where_condition;
-		
-		$meal_ids = DB::instance(DB_NAME)->select_array($q, 'meal_id');
-		
-		$meals = "";
-		
-		foreach ($meal_ids as $meal_id => $value) {
+		if ($get_meals == TRUE) {
+			$q = "SELECT meal_id
+					FROM meals ".$where_condition." 
+					ORDER BY meal_date DESC";
 			
-			$meals[$meal_id] = Load::meal($meal_id, $this->user->user_id);
-		
+			$meal_ids = DB::instance(DB_NAME)->select_array($q, 'meal_id');
+						
+			if ($meal_ids) {
+				$meals = "";
+				
+				foreach ($meal_ids as $meal_id => $value) {
+					
+					$meals[$meal_id] = Load::meal($meal_id, $this->user->user_id);
+				
+				}
+
+
+				$this->template->content->meals = $meals;
+				$message = "";
+			}
+			else {
+				$message = "There are currently no meals to display.<br><br>";
+			}			
 		}
-		
+		else {
+			$message = "There are currently no meals to display.<br><br>";
+		}	
 		
 		# Set variable for "current" navigation style
-		$this->template->nav = "stream";		
+		$this->template->nav = $nav;		
 		$this->template->title = "Yumstream";		
 		$this->template->content->h2 = $h2;
+		$this->template->content->message = $message;
 		
-		$this->template->content->meals = $meals;
-		
-		 		echo Debug::dump($meals,"Contents of POST");
-
 		# Render the view
 		echo $this->template;
 	

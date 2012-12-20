@@ -39,7 +39,13 @@
 			<? if ($user): ?>
 			<ul id="utilitynav">
 				<li>Welcome, <?=$user->display_name?> |</li>
-				<li><a href="/users/logout">Log Out</a></li>
+				<li><a href="/users/logout">Log Out</a> |</li>
+				<li><a href="/users/about"
+					<? if ($nav == "about"): ?>
+						class="current"
+					<? endif; ?>
+				>About</a></li>
+				
 			</ul>
 			
 			<!-- Main navigation -->
@@ -49,24 +55,24 @@
 						class="current"
 					<? endif; ?>
 				>Add a meal</a></li>
+				<li><a href="/meals/view/yours"
+					<? if ($nav == "your_meals"): ?>
+						class="current"
+					<? endif; ?>	
+				>Your meals</a></li>
 				<li><a href="/users/userlist"
 					<? if ($nav == "friends"): ?>
 						class="current"
 					<? endif; ?>	
 				>Your friends</a></li>
+				<div class="clear"></div>
 				<li><a href="/dishes/add"
 					<? if ($nav == "add_dish"): ?>
 						class="current"
 					<? endif; ?>	
 				>Add a <br>dish</a></li>
-				<div class="clear"></div>
-				<li><a href="/meals/view/yours"
-					<? if ($nav == "meals"): ?>
-						class="current"
-					<? endif; ?>	
-				>Your meals</a></li>
 				<li><a href="/meals/view/stream"
-					<? if ($nav == "stream"): ?>
+					<? if ($nav == "friends_meals"): ?>
 						class="current"
 					<? endif; ?>	
 				>Friends' meals</a></li>

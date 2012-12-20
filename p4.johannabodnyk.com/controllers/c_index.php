@@ -38,7 +38,7 @@ class index_controller extends base_controller {
 		
 		# If user is already logged in, redirect to /posts/stream (landing page)
 		else {
-			Router::redirect("/posts/stream");
+			Router::redirect("/meals/view/stream");
 		}
 
 }

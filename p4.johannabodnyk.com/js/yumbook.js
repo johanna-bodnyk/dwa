@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
 	//
-	// Avatar image uploading on Edit Profile form
+	// Avatar image uploading radio controls on Edit Profile form
 	//
 	
 	$('input#keep').click(function () {
@@ -77,7 +77,7 @@ $(document).ready(function() {
 			url: href,	
 		});
 		
-		$(this).text('Unfollow');
+		$(this).text('Stop following');
 		$(this).removeClass('follow-button').addClass('unfollow-button');
 		
 		var user_id = href.substr(href.length-1);
@@ -212,7 +212,9 @@ $(document).ready(function() {
 		
 	});
 	
+	// ValidationEngine form validation plugin
 	$('form').validationEngine();
+	
 });
 
 
@@ -228,14 +230,14 @@ $(function() {
 //
 // Function called from image uploading iframe after image 
 // uploading form is submitted, to hide iframe and add 
-// display of image, hidden field with file name in main form, 
+// display image, hidden field with file name in main form, 
 // and remove button
 //
 function replace_iframe(image_id, preview, original) {
 
 	console.log("Hello I was called from the iframe with image id "+image_id);
 	
-	var image_html = '<div class="new-image"><img src="/temp/'+preview+'"><input type="hidden" name="images[]" value="'+original+'";><input type="button" class="delete-new-image" value="Remove"></div>';
+	var image_html = '<div class="new-image"><img src="/temp/'+preview+'"><input type="hidden" name="images[]" value="'+original+'" ><input type="button" class="delete-new-image" value="Remove"></div>';
 	
 	$('div#image-input-'+image_id).prepend(image_html);
 	

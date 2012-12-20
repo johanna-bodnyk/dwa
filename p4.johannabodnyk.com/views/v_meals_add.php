@@ -18,15 +18,15 @@
 
 		<form name="add-meal" action="/meals/p_add" method="POST" enctype="multipart/form-data">
 
-			
-				<label for="date">Date &amp; Time of Meal</label>
-				<input type="text" name="date" id="date" class="datepicker" value="MM/DD/YYYY">
-				<input type="text" name="time" id="time" value="eg. 9:30am">
+		
+			<label for="date">Date &amp; Time of Meal</label>
+			<input type="text" name="date" id="date" class="datepicker" value="MM/DD/YYYY">
+			<input type="text" name="time" id="time" value="eg. 9:30am">
 			
 	<? endif; ?>
 			
 			<label for="dish">Dish name</label>
-			<input type="text" name="dish" id="dish" value="<?=$dish_name?>">
+			<input type="text" name="dish" id="dish" class="validate[required]" value="<?=$dish_name?>">
 			<input type="hidden" name="dish_id" id="dish_id" value="<?=$dish_id?>">
 			<p id="add-new-dish">No matching dishes found. Create a new dish with this name?
 				<input type="button" value="Create new dish">
@@ -35,16 +35,9 @@
 				<h3>New Dish Information</h3>
 					<fieldset id="recipe-source">
 					<h3>Recipe Source</h3>
-					<label for="source_type">Source Type</label>
-					<select name="source_type" id="source_type">
-						<option value="none"></option>
-						<option value="online">Online Recipe</option>
-						<option value="cookbook">Cookbook</option>
-						<option value="restaurant">Restaurant Meal</option>
-						<option value="original">Original Recipe</option>
-					</select>			
 					<label for="source_name">Source Name</label>
 					<input type="text" name="source_name" id="source_name" value="">
+					<p class="instructions">Name of website, restaurant, or cookbook that recipe or dish is from.</p>
 					<label for="source_link">Source Link</label>	
 					<input type="text" name="source_link" id="source_link" value="">
 					<p class="instructions">Link to online recipe, restaurant website, or cookbook.</p>
@@ -64,7 +57,6 @@
 					</iframe>
 				</div>
 			</div>
-			<p class="instructions">If you are creating a new dish, these photos will also appear on the dish information page, as well as in your stream for this meal.</p>
 			<input type="button" id="add-another-photo" value="Add another photo">
 				
 			<label for="note">Notes</label>
@@ -73,7 +65,7 @@
 			<input type="submit" value="Save" name="save-submit" id="submit-button">
 			<input type="submit" value="Save &amp; Add Another Dish to This Meal" name="save-add-submit" id="submit-button">
 						
-			<p class="form-button"><a class="button" href="#">Cancel</a>
+			<p class="form-button"><a class="button" href="/meals/view/yours">Cancel</a>
 			
 		</form>
 		

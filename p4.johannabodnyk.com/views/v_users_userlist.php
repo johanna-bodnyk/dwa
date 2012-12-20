@@ -5,7 +5,13 @@
 			<? foreach($users as $user): ?>
 				<li>
 					<img src="/uploads/<?=$user['profile_image']?>">
-					<a href="/users/profile/<?=$user['user_id']?>"><?=$user['display_name']?></a>
+					<a href="/meals/view/user/<?=$user['user_id']?>"
+					<? if(isset($connections[$user['user_id']])): ?>
+						class="followed"
+					<? endif; ?>
+					
+					
+					><?=$user['display_name']?></a>
 								
 					<!-- If this user is currently being followed, show button to unfollow and add li class "followed" -->
 					<? if(isset($connections[$user['user_id']])): ?>

@@ -89,7 +89,7 @@ class users_controller extends base_controller {
 			setcookie("token", $token, strtotime('+2 weeks'), '/');
 			
 			# Redirect to profile editing page
-			Router::redirect("/users/edit_profile");
+			Router::redirect("/users/edit_profile/new_user");
 		}
 	}
 	
@@ -122,7 +122,7 @@ class users_controller extends base_controller {
 		# Otherwise, set cookie using token and redirect to landing page
 		else {
 			setcookie("token", $token, strtotime('+2 weeks'), '/');
-			Router::redirect("/posts/stream");
+			Router::redirect("/meals/view/stream");
 		}
 	
 	}
@@ -169,7 +169,7 @@ class users_controller extends base_controller {
 		# Check for variable indicating a redirect from the sign-up form,
 		# and if so set $message to show a welcome messages
 		if($status == "new_user") {
-			$message = "<p class='message'>Welcome to Chirper! Fill out your profile so people know who you are! <br> <a href='/posts'>(Or skip this for now.)</a></p>";
+			$message = "<p>Welcome to Yumbook! Please review your Display Name below, and upload an Avatar image (optional).</p>";
 		}
 		else {
 			$message = "";
@@ -177,6 +177,7 @@ class users_controller extends base_controller {
 						
 		# Send necessary data/variables to the view
 		$this->template->content->message = $message;
+		$this->template->content->status = $status;
 		
 		# Set variable for "current" navigation style
 		$this->template->nav = "account";
@@ -238,6 +239,9 @@ class users_controller extends base_controller {
 		# Unset duplicate password element
 		unset($_POST['password_check']);		
 		
+		$status = $_POST['status'];
+		unset($_POST['status']);		
+		
 		# First name, last name, and email are required.
 		
 		# If those array elements are blank, remove from POST array
@@ -260,10 +264,55 @@ class users_controller extends base_controller {
 		}
 		
 		# Update DB with new profile information (including empty fields)
-		DB::instance(DB_NAME)->update("users", $_POST, "WHERE token = '".$this->user->token."'");		
+		DB::instance(DB_NAME)->update("users", $_POST, "WHERE token = '".$this->user->token."'");	
+
+		 if ($status == "new_user") {
+			Router::redirect('/users/about/new_user'); 
+		 }
+		 else {
+			Router::redirect('/meals/view/stream'); 
+		 }
 	
 	}
 
+/*-------------------------------------------------------------------------------------------------
+
+	Welcome/Instructions page
+	
+-------------------------------------------------------------------------------------------------*/		
+	public function about($status = NULL) {
+	
+		# Authenticate, return to homepage if failed
+		if(!$this->user) {
+			Router::redirect('/');
+			return false;
+		}
+
+		# Set up the view 
+		$this->template->content = View::instance('v_users_about');
+		$this->template->title   = 'Welcome to Yumbook';
+		
+		# Check for variable indicating a redirect from the edit profile form after sign-up,
+		# and if so set $message to show a welcome messages
+		if($status == "new_user") {
+			$message = "<p>Welcome to Yumbook!</p>";
+		}
+		else {
+			$message = "";
+		}
+						
+		# Send necessary data/variables to the view
+		$this->template->content->message = $message;
+		
+		# Set variable for "current" navigation style
+		$this->template->nav = "about";
+
+		# Render the view
+		echo $this->template;
+
+	
+
+	}
 /*-------------------------------------------------------------------------------------------------
 
 	User list
@@ -271,7 +320,13 @@ class users_controller extends base_controller {
 -------------------------------------------------------------------------------------------------*/		
 	public function userlist() {		
 	
-		$this->template->content = View::instance("v_users_list");
+		# Authenticate, return to homepage if failed
+		if(!$this->user) {
+			Router::redirect('/');
+			return false;
+		}
+		
+		$this->template->content = View::instance("v_users_userlist");
 			
 		$q = "SELECT user_id, display_name, profile_image
 			FROM users
@@ -279,7 +334,15 @@ class users_controller extends base_controller {
 			
 		$users = DB::instance(DB_NAME)->select_rows($q);
 		
+		# Get the list of user_ids this user is following
+		$q = "SELECT * 
+			FROM users_users
+			WHERE user_id = ".$this->user->user_id;
+	
+		$connections = DB::instance(DB_NAME)->select_array($q, 'user_id_followed');
+		
 		$this->template->content->users = $users;
+		$this->template->content->connections = $connections;
 		
 		# Set variable for "current" navigation style
 		$this->template->nav = "friends";

@@ -5,10 +5,10 @@
 		<form name="add-dish" action="/dishes/p_add" method="POST" enctype="multipart/form-data">
 
 			<label for="name">Name of dish or food</label>
-			<input type="text" name="name" id="name" value="">
+			<input type="text" name="name" id="name" class="validate[required]" value="">
 			
 			<!-- Image section-->
-			<h3>Photos</h3>
+			<label>Photos</label>
 			
 			<div id="image-inputs">
 				<div id="image-input-1">
@@ -20,28 +20,14 @@
 			
 			<fieldset id="recipe-source">
 				<h3>Recipe Source</h3>
-				<label for="source_type">Source Type</label>
-				<select name="source_type" id="source_type">
-					<option value="none"></option>
-					<option value="online">Online Recipe</option>
-					<option value="cookbook">Cookbook</option>
-					<option value="restaurant">Restaurant Meal</option>
-					<option value="original">Original Recipe</option>
-				</select>			
 				<label for="source_name">Source Name</label>
 				<input type="text" name="source_name" id="source_name" value="">
-				<label for="source_link">Source Link</label>	
-				<span class="instructions">Link to online recipe, restaurant website, or cookbook.</span>
+				<p class="instructions">Name of website, restaurant, or cookbook that recipe or dish is from.</p>
+				<label for="source_link">Source Link</label>
 				<input type="text" name="source_link" id="source_link" value="">
+				<p class="instructions">Link to recipe or restaurant.</p>
 			</fieldset>
-			<label for="default_meal_type">Default Meal
-			</label>
-			<select name="default_meal_type" id="default_meal_type">
-				<option value="breakfast">Breakfast</option>
-				<option value="lunch">Lunch</option>
-				<option value="dinner">Dinner</option>
-				<option value="snack">Snack</option>
-			</select>	
+
 
 				
 			<label for="note">Notes</label>
@@ -49,9 +35,8 @@
 			
 			<input type="submit" value="Save Dish" id="submit-button">
 			
-			<p class="form-button"><a class="button" href="#">Cancel</a>
-			
-			<p class="form-button"><a class="button delete" href="/dishes/delete">Delete Dish</a>
+			<p class="form-button"><a class="button" href="/meals/view/yours">Cancel</a>
+
 		</form>
 		
  		<div class=clear></div>

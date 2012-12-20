@@ -1,7 +1,10 @@
 <h2><?=$h2?></h2>
 		
+		<?=$message?>
+		
 		<ul id="yumstream">
 		
+		<? if(isset($meals)): ?>
 		<? foreach ($meals as $meal_id => $dishes): ?>
 			<li class="meal">		
 					<ul class="dishes">			
@@ -20,11 +23,11 @@
 							<? endforeach; ?>
 						</div>
 						<div class="info">
-							<h3 class="dish-title"><?=$dish['name']?></h3>
+							<h3 class="dish-title"><a href="/dishes/view/<?=$dish['dish_id']?>"><?=$dish['name']?></a></h3>
 							<? if ($dish['note'] != ""): ?>
 								<p class="note toggle"><?=$dish['note']?></p>
 							<? endif; ?>
-							<p class="user toggle"><a href="/meals/stream/user<?=$dish['user_id']?>"><?=$dish['display_name']?></a> <span class="date">| <?=$dish['meal_date']?></span></p>
+							<p class="user toggle"><a href="/meals/stream/user/<?=$dish['user_id']?>"><?=$dish['display_name']?></a> <span class="date">| <?=$dish['meal_date']?></span></p>
 						<div class="buttons toggle">
 							<p class="wants" id="wants">
 							<span class="count">Wants: <?=$dish['wants']?> </span>							
@@ -44,7 +47,7 @@
 							<? foreach ($dish['comments'] as $c): ?>
 								<li class="comment">
 									<img class="avatar" src="/uploads/<?=$c['profile_image']?>">
-									<span class="comment-user"><a href="/meals/stream/<?=$c['user_id']?>"><?=$c['display_name']?></a></span>
+									<span class="comment-user"><a href="/meals/view/user/<?=$c['user_id']?>"><?=$c['display_name']?></a></span>
 									<span class="comment-text"><?=$c['comment']?></span>
 									<span class="comment-date"><br><?=$c['created']?></span>
 								</li>
@@ -67,5 +70,6 @@
 					</ul>
 			</li>
 		<? endforeach; ?>
+		<? endif; ?>
 		
 		</ul>
