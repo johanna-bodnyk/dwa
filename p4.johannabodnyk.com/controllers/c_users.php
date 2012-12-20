@@ -277,7 +277,7 @@ class users_controller extends base_controller {
 			FROM users
 			WHERE user_id != ".$this->user->user_id;
 			
-		$users = DB::instance(DB_NAME)->select_fields($q);
+		$users = DB::instance(DB_NAME)->select_rows($q);
 		
 		$this->template->content->users = $users;
 		
